@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="pt-AO">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SGO - Sistema de Gestão de Operação</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+  <script type="importmap">
+{
+  "imports": {
+    "react": "https://aistudiocdn.com/react@^19.2.0",
+    "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.0/",
+    "react/": "https://aistudiocdn.com/react@^19.2.0/",
+    "react-router-dom": "https://aistudiocdn.com/react-router-dom@^7.9.4",
+    "lucide-react": "https://aistudiocdn.com/lucide-react@^0.548.0",
+    "recharts": "https://esm.sh/recharts@2.12.7"
+  }
+}
+</script>
+<style>
+  body {
+    font-family: 'Inter', sans-serif;
+    background-color: #f8fafc; /* bg-slate-50 */
+    position: relative;
+  }
+  
+  body.has-bg-image::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxOTIwIDEwODAiPgo8ZGVmcz4KPGxpbmVhckdyYWRpZW50IGlkPSJnMSIgeDE9IjAiIHkxPSIwLjUiIHgyPSIxIiB5Mj0iMC41Ij4KPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzAwMkI3RiIgc3RvcC1vcGFjaXR5PSIwLjMiLz4KPHN0b3Agb2Zmc2V0PSIxMDAlIiBzdG9wLWNvbG9yPSIjMDAxYTQxIiBzdG9wLW9wYWNpdHk9IjAuNSIvPgo8L2xpbmVhckdyYWRpZW50Pgo8L2RlZnM+CjxyZWN0IHdpZHRoPSIxOTIwIiBoZWlnaHQ9IjEwODAiIGZpbGw9InRyYW5zcGFyZW50Ii8+CjxnIGNsYXNzPSJnIiB0cmFuc2Zvcm09InRyYW5zbGF0ZSgwIDApIiBzdHJva2U9InVybCgjZzEpIiBzdHJva2Utd2lkdGg9IjEuNSI+CjxjaXJjbGUgY3g9Ijk2MCIgY3k9IjU0MCIgcj0iMzAwIiBvcGFjaXR5PSIwLjEiLz4KPGNpcmNsZSBjeD0iOTYwIiBjeT0iNTQwIiByPSI0MDAiIG9wYWNpdHk9IjAuMDgiLz4KPGNpcmNsZSBjeD0iOTYwIiBjeT0iNTQwIiByPSI1MCIgb3BhY2l0eT0iMC4wNiIvPgo8Y2lyY2xlIGN4PSI5NjAiIGN5PSI1NDAiIHI9IjYwMCIgb3BhY2l0eT0iMC4wNCIvPgo8Y2lyY2xlIGN4PSI5NjAiIGN5PSI1NDAiIHI9IjcwMCIgb3BhY2l0eT0iMC4wMiIvPgo8L2c+CjxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKDAgMCkiIGZpbGw9InVybCgjZzEpIj4KPGNpcmNsZSBjeD0iNjAwIiBjeT0iMzAwIiByPSIyIiBvcGFjaXR5PSIwLjIiLz4KPGNpcmNsZSBjeD0iMTIwMCIgY3k9IjgwMCIgcj0iMyIgb3BhY2l0eT0iMC4zIi8+CjxjaXJjbGUgY3g9IjE1MCIgY3k9IjkwMCIgcj0iMSIgb3BhY2l0eT0iMC4xIi8+CjxjaXJjbGUgY3g9IjE3MDAiIGN5PSIyMDAiIHI9IjIiIG9wYWNpdHk9IjAuMiIvPgo8L2c+Cjwvc3ZnPg==');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    opacity: 0.1;
+    z-index: -1;
+    pointer-events: none;
+  }
+
+  html.dark body.has-bg-image::before {
+    opacity: 0.08;
+    filter: brightness(1.2) contrast(1.1);
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  .page-transition {
+    animation: fadeIn 0.4s ease-out forwards;
+  }
+
+  /* Chatbot Styles */
+  .chatbot-float-button {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    width: 64px;
+    height: 64px;
+    background-color: #002B7F;
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    border: none;
+    cursor: pointer;
+    z-index: 999;
+    transition: transform 0.2s ease-out, background-color 0.2s;
+  }
+  .chatbot-float-button:hover {
+    transform: scale(1.05);
+    background-color: #002266;
+  }
+
+  .chatbot-widget {
+    position: fixed;
+    bottom: 100px;
+    right: 24px;
+    width: 380px;
+    max-width: calc(100% - 48px);
+    height: 550px;
+    max-height: calc(100vh - 120px);
+    background-color: #f0f4f8;
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    transform: translateY(20px) scale(0.95);
+    opacity: 0;
+    visibility: hidden;
+    transition: transform 0.3s ease-out, opacity 0.3s ease-out, visibility 0.3s;
+    z-index: 998;
+    font-family: 'Inter', sans-serif;
+  }
+
+  .chatbot-widget.open {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+    visibility: visible;
+  }
+
+  .chatbot-header {
+    background-color: #002B7F;
+    color: white;
+    padding: 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-shrink: 0;
+  }
+  
+  .chatbot-messages {
+    flex-grow: 1;
+    overflow-y: auto;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .message-container {
+    display: flex;
+    flex-direction: column;
+    max-width: 80%;
+    animation: fadeIn 0.3s ease-out forwards;
+  }
+  .message-container.user {
+    align-self: flex-end;
+    align-items: flex-end;
+  }
+  .message-container.ai {
+    align-self: flex-start;
+    align-items: flex-start;
+  }
+
+  .message-bubble {
+    padding: 10px 14px;
+    border-radius: 18px;
+    font-size: 14px;
+    line-height: 1.5;
+  }
+  .message-container.user .message-bubble {
+    background-color: #002B7F;
+    color: white;
+    border-bottom-right-radius: 4px;
+  }
+  .message-container.ai .message-bubble {
+    background-color: #ffffff;
+    color: #334155;
+    border: 1px solid #e2e8f0;
+    border-bottom-left-radius: 4px;
+  }
+
+  .chatbot-input-form {
+    display: flex;
+    padding: 12px;
+    border-top: 1px solid #e2e8f0;
+    background-color: #ffffff;
+    flex-shrink: 0;
+  }
+  .chatbot-input {
+    flex-grow: 1;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    padding: 10px 12px;
+    font-size: 14px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .chatbot-input:focus {
+    border-color: #002B7F;
+  }
+  .chatbot-send-button {
+    margin-left: 8px;
+    background-color: #002B7F;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    width: 42px;
+    height: 42px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: background-color 0.2s;
+  }
+  .chatbot-send-button:hover {
+    background-color: #002266;
+  }
+
+  .typing-indicator span {
+    height: 8px;
+    width: 8px;
+    background-color: #94a3b8;
+    border-radius: 50%;
+    display: inline-block;
+    margin: 0 1px;
+    animation: bounce 1.2s infinite ease-in-out;
+  }
+  .typing-indicator span:nth-child(2) { animation-delay: -0.2s; }
+  .typing-indicator span:nth-child(3) { animation-delay: -0.4s; }
+  @keyframes bounce {
+    0%, 80%, 100% { transform: scale(0); }
+    40% { transform: scale(1.0); }
+  }
+  
+  /* Notification Styles */
+  .notification-container {
+    position: fixed;
+    top: 24px;
+    right: 24px;
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .notification-toast {
+    width: 350px;
+    max-width: 90vw;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    padding: 16px;
+    display: flex;
+    align-items: flex-start;
+    animation: slideInRight 0.3s ease-out forwards;
+  }
+  
+  html.dark .notification-toast {
+    background-color: #1e293b; /* slate-800 */
+    border-left: 4px solid #4ade80;
+  }
+  
+  @keyframes slideInRight {
+    from {
+      opacity: 0;
+      transform: translateX(100%);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  /* Dropdown Menu Styles */
+  .dropdown-menu {
+    position: absolute;
+    right: 0;
+    top: calc(100% + 10px);
+    width: 320px;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+    border: 1px solid #e2e8f0;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition: opacity 0.2s ease-out, transform 0.2s ease-out, visibility 0.2s;
+    z-index: 20;
+  }
+
+  .dropdown-menu.open {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+  }
+
+  html.dark .dropdown-menu {
+    background-color: #1e293b; /* slate-800 */
+    border-color: #334155; /* slate-700 */
+  }
+
+  /* Notification dot indicator */
+  .notification-dot {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 10px;
+    height: 10px;
+    background-color: #facc15; /* yellow-400 */
+    border-radius: 50%;
+    border: 2px solid #000000; /* Match header bg */
+    animation: pulse 1.5s infinite;
+  }
+
+  @keyframes pulse {
+    0% {
+      transform: scale(0.9);
+      box-shadow: 0 0 0 0 rgba(250, 204, 21, 0.7);
+    }
+    70% {
+      transform: scale(1);
+      box-shadow: 0 0 0 8px rgba(250, 204, 21, 0);
+    }
+    100% {
+      transform: scale(0.9);
+      box-shadow: 0 0 0 0 rgba(250, 204, 21, 0);
+    }
+  }
+
+
+  /* Dark Mode Styles */
+  html.dark body {
+      background-color: #0f172a; /* slate-900 */
+      color: #e2e8f0; /* slate-200 */
+  }
+  html.dark .bg-slate-50 {
+      background-color: #0f172a; /* slate-900 */
+  }
+  html.dark .bg-white {
+      background-color: #1e293b; /* slate-800 */
+      border-color: #334155; /* slate-700 */
+  }
+   html.dark .bg-gray-50 {
+      background-color: #334155; /* slate-700 */
+  }
+  html.dark .text-gray-800, html.dark .text-gray-900 {
+      color: #f1f5f9; /* slate-100 */
+  }
+  html.dark .text-gray-600 {
+      color: #94a3b8; /* slate-400 */
+  }
+  html.dark .text-gray-700 {
+      color: #cbd5e1; /* slate-300 */
+  }
+  html.dark .text-gray-500 {
+      color: #64748b; /* slate-500 */
+  }
+  html.dark .border-gray-200, html.dark .divide-gray-200 > :not([hidden]) ~ :not([hidden]) {
+      border-color: #334155; /* slate-700 */
+  }
+  html.dark input, html.dark select, html.dark textarea {
+      background-color: #334155; /* slate-700 */
+      border-color: #475569; /* slate-600 */
+      color: #f1f5f9; /* slate-100 */
+  }
+   html.dark input::placeholder, html.dark textarea::placeholder {
+      color: #94a3b8; /* slate-400 */
+  }
+  html.dark table thead.bg-gray-50 {
+    background-color: #334155;
+  }
+  html.dark tr.hover\:bg-gray-50:hover, html.dark tr.hover\:bg-gray-100:hover {
+      background-color: #334155; /* slate-700 */
+  }
+  html.dark button.hover\:bg-gray-100:hover {
+      background-color: #334155; /* slate-700 */
+  }
+  html.dark .bg-blue-100 { background-color: rgba(59, 130, 246, 0.2); }
+  html.dark .text-blue-700 { color: #93c5fd; }
+  html.dark .bg-green-100 { background-color: rgba(34, 197, 94, 0.2); }
+  html.dark .text-green-700, html.dark .text-green-800 { color: #86efac; }
+  html.dark .bg-purple-100 { background-color: rgba(168, 85, 247, 0.2); }
+  html.dark .text-purple-700, html.dark .text-purple-800 { color: #d8b4fe; }
+  html.dark .bg-red-100 { background-color: rgba(239, 68, 68, 0.2); }
+  html.dark .text-red-700, html.dark .text-red-800 { color: #fca5a5; }
+  html.dark .bg-orange-100 { background-color: rgba(249, 115, 22, 0.2); }
+  html.dark .text-orange-700, html.dark .text-orange-800 { color: #fdba74; }
+  html.dark .bg-gray-100 { background-color: #334155; }
+  html.dark .text-gray-700 { color: #d1d5db; }
+  html.dark .bg-indigo-100 { background-color: rgba(99, 102, 241, 0.2); }
+  html.dark .text-indigo-700 { color: #a5b4fc; }
+  html.dark .bg-teal-100 { background-color: rgba(20, 184, 166, 0.2); }
+  html.dark .text-teal-700 { color: #5eead4; }
+  html.dark .bg-lime-100 { background-color: rgba(132, 204, 22, 0.2); }
+  html.dark .text-lime-700 { color: #bef264; }
+  html.dark .bg-amber-100 { background-color: rgba(245, 158, 11, 0.2); }
+  html.dark .text-amber-700 { color: #fcd34d; }
+  html.dark .bg-cyan-100 { background-color: rgba(6, 182, 212, 0.2); }
+  html.dark .text-cyan-700 { color: #67e8f9; }
+  html.dark .bg-yellow-100 { background-color: rgba(234, 179, 8, 0.2); }
+  html.dark .text-yellow-700, html.dark .text-yellow-800 { color: #fde047; }
+  .bg-pink-100 { background-color: #fce7f3; }
+  .text-pink-700 { color: #be185d; }
+  html.dark .bg-pink-100 { background-color: rgba(219, 39, 119, 0.2); }
+  html.dark .text-pink-700 { color: #f9a8d4; }
+</style>
+<link rel="stylesheet" href="/index.css">
+</head>
+  <body>
+    <div id="root"></div>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
+    <script type="module" src="/index.tsx"></script>
+  </body>
+</html>
