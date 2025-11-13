@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import logo from '../conteudo/imagem/Imagem1.png';
+import logo from '../conteudo/imagem/Imagem1_logo.png';
 import { useAuth } from '../hooks/useAuth';
 import { LogOut, User, Settings, Bell, FileText, AlertTriangle, Trash2, LayoutGrid } from 'lucide-react';
 import { useNavigate, Link } from 'react-router-dom';
