@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
+import logo from '../conteudo/imagem/Imagem1.png';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 import { LogIn, User, Lock, Loader2, AlertTriangle } from 'lucide-react';
+
 
 const LoginPage: React.FC = () => {
   const navigate = useNavigate();
@@ -42,7 +44,7 @@ const LoginPage: React.FC = () => {
                 <div className="z-8">
                     <div className="flex items-center space-x-3">
                         <div className="w-25 h-15 rounded-md  flex items-center justify-center">
-                            <span className="text-xl font-black text-white"><img src="/conteudo/imagem/Imagem1.png" alt="CGCF Logo" /></span>
+                            <span className="text-xl font-black text-white"><img src={logo} alt="CGCF Logo" /></span>
                         </div>
                     </div>
                 </div>
