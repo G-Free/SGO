@@ -153,7 +153,7 @@ const AnalisesPage: React.FC = () => {
             title="Evolução Mensal (Missões vs Infrações)"
             icon={TrendingUp}
             filter={
-                <select value={evolutionYear} onChange={e => setEvolutionYear(e.target.value)} className="text-sm rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                <select title="Filtrar dados por ano" value={evolutionYear} onChange={e => setEvolutionYear(e.target.value)} className="text-sm rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
                     <option value="2024">2024</option>
                     <option value="2023">2023</option>
                 </select>
@@ -176,7 +176,7 @@ const AnalisesPage: React.FC = () => {
             title="Projetos por Categoria" 
             icon={FolderKanban}
             filter={
-                 <select value={projectDept} onChange={e => setProjectDept(e.target.value)} className="text-sm rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                 <select title="Filtrar projetos por departamento" value={projectDept} onChange={e => setProjectDept(e.target.value)} className="text-sm rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
                     {Object.keys(projectsDataByDept).map(dept => <option key={dept} value={dept}>{dept}</option>)}
                 </select>
             }

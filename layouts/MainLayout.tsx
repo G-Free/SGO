@@ -1,78 +1,94 @@
-
-
-
-
-import React, { useEffect, useRef } from 'react';
-import { Outlet, useLocation, useNavigate } from 'react-router-dom';
-import Header from '../components/Header';
-import Footer from '../components/Footer';
-import ChatbotWidget from '../components/ChatbotWidget';
+import React, { useEffect, useRef } from "react";
+import { Outlet, useLocation, useNavigate } from "react-router-dom";
+import Header from "../components/Header";
+import Footer from "../components/Footer";
+import ChatbotWidget from "../components/ChatbotWidget";
+import { useAuth } from "../hooks/useAuth";
 
 const routeTitles: { [key: string]: string } = {
-  '/dashboard': 'Painel Principal',
-  '/perfil': 'Meu Perfil',
-  '/notificacoes': 'Central de Notificações',
-  '/relatorios': 'Relatórios',
-  '/relatorios/novo': 'Novo Relatório',
-  '/termos-de-referencia': 'Termos de Referência',
-  '/termos-de-referencia/novo': 'Novo Termo de Referência',
-  '/rh': 'Recursos Humanos',
-  '/financeiro': 'Orçamento e Finanças',
-  '/contabilidade': 'Módulo de Contabilidade',
-  '/contabilidade/balancete': 'Balancete de Verificação',
-  '/contabilidade/dre': 'Demonstração de Resultados',
-  '/gestao-crises': 'Gestão de Crises',
-  '/atividades': 'Atividades',
-  '/projetos': 'Projetos',
-  '/ocorrencias': 'Ocorrências e Suporte',
-  '/ordens-de-servico': 'Ordens de Serviço',
-  '/patrimonio-e-meios': 'Património e Meios',
-  '/utilizadores': 'Utilizadores e Perfis',
-  '/seguranca-auditoria': 'Segurança e Acessos',
-  '/configuracoes': 'Configuração do Sistema',
-  '/orgaos-e-composicao': 'Órgãos e Composição',
-  '/plano-de-acao': 'Plano de Ação e Estratégias',
-  '/postos-fronteiricos': 'Postos Fronteiriços',
-  '/gestao-de-risco': 'Gestão de Risco e Fiscalização',
-  '/comunicacao-interinstitucional': 'Comunicação Interinstitucional',
-  '/observadores-e-parceiros': 'Observadores e Parceiros',
-  '/gis': 'Análise Geoespacial (GIS)',
-  '/analises': 'Análises e Estatísticas',
-  '/ameacas-ciberneticas': 'Gestão de Ameaças Cibernéticas',
-  '/bugs': 'Gestão de Bugs',
-  '/sms-email': 'Comunicações SMS/Email',
-  '/procedimento-gma': 'Procedimento GMA',
+  "/dashboard": "Painel Principal",
+  "/perfil": "Meu Perfil",
+  "/notificacoes": "Central de Notificações",
+  "/relatorios": "Gestão de Relatórios",
+  "/coordenacao-central": "Centro de Coordenação Central",
+  "/tecnico-operacao-central": "Cockpit do Técnico Operacional",
+  "/gestao-operacional": "Monitorização Operacional",
+  "/atividades": "Atividades e Missões",
+  "/utilizadores": "Utilizadores e Funções",
+  "/configuracoes": "Configurações do Sistema",
+  "/coordenacao-regional": "Coordenação Regional",
+  "/ordens-de-servico": "Ordens Operativas",
+  "/ordens-de-servico/nova": "Emitir Ordem Operativa",
+  "/procedimento-gma": "Procedimentos GMA",
 };
 
 const getPageTitle = (pathname: string): string => {
-  if (pathname.match(/^\/relatorios\/editar\/.+/)) return 'Editar Relatório';
-  if (pathname.match(/^\/termos-de-referencia\/editar\/.+/)) return 'Editar Termo de Referência';
-  if (pathname.match(/^\/atividades\/.+\/relatorio/)) return 'Relatório de Atividade';
-  return routeTitles[pathname] || 'SGO';
+  if (pathname.match(/^\/relatorios\/editar\/.+/)) return "Editar Relatório";
+  if (pathname.match(/^\/atividades\/.+\/relatorio/))
+    return "Gerar Relatório de Missão";
+  if (pathname.match(/^\/ordens-de-servico\/editar\/.+/))
+    return "Editar Ordem Operativa";
+  return routeTitles[pathname] || "SGO";
 };
 
-
 const MainLayout = () => {
+  const { user } = useAuth();
   const location = useLocation();
   const navigate = useNavigate();
   const pageTitle = getPageTitle(location.pathname);
   const initialLoadRef = useRef(true);
 
   useEffect(() => {
-    document.body.classList.add('has-bg-image');
-    return () => {
-      document.body.classList.remove('has-bg-image');
-    };
+    document.body.classList.add("has-bg-image");
+    return () => document.body.classList.remove("has-bg-image");
   }, []);
 
   useEffect(() => {
-    // On every refresh, the app remounts and this ref is true.
-    // This effect redirects to the dashboard on the first render after a refresh.
-    if (initialLoadRef.current) {
-      initialLoadRef.current = false;
-      navigate('/dashboard', { replace: true });
+    const path = location.pathname;
+    const role = user?.profile.role;
+
+    // BLOQUEIO PCA: Só pode ver Monitorização, Perfil, Notificações e Dashboard
+    if (role === "coordenador_central") {
+      const allowed = [
+        "/gestao-operacional",
+        "/perfil",
+        "/notificacoes",
+        "/dashboard",
+      ];
+      const isAllowed = allowed.some((p) => path.startsWith(p));
+      if (!isAllowed) {
+        navigate("/gestao-operacional", { replace: true });
+      }
+    } else if (role === "coordenador_operacional_central") {
+      // Adicionado '/ordens-de-servico' à lista de permissões da Direção
+      if (
+        !path.startsWith("/dashboard") &&
+        path !== "/perfil" &&
+        path !== "/dashboard" &&
+        !path.startsWith("/relatorios") &&
+        !path.startsWith("/atividades") &&
+        !path.startsWith("/plano-de-acao") &&
+        !path.startsWith("/gestao-operacional") &&
+        !path.startsWith("/ordens-de-servico")
+      ) {
+        navigate("/dashboard", { replace: true });
+      }
+    } else if (role === "tecnico_operacional_central") {
+      const allowed = [
+        "/relatorios",
+        "/atividades",
+        "/perfil",
+        "/notificacoes",
+        "/dashboard",
+        "/gestao-operacional",
+        "/procedimento-gma",
+      ];
+      const isAllowed = allowed.some((p) => path.startsWith(p));
+      if (!isAllowed) {
+        navigate("/dashboard", { replace: true });
+      }
     }
-  }, [navigate]);
+  }, [navigate, user, location.pathname]);
 
   return (
     <div className="min-h-screen flex flex-col">

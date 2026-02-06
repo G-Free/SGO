@@ -8,7 +8,7 @@ const Footer: React.FC = () => {
           &copy; 2025 Comité de Gestão Coordenada de Fronteiras.
         </p>
         <p className="text-xs text-gray-400 mt-2">
-          Elaborado pela Equipa Técnica da Interoperabilidade dos Sistemas
+          Elaborado por: Equipa Técnica da Interoperabilidade dos Sistemas
         </p>
       </div>
     </footer>

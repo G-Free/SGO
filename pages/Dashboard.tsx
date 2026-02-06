@@ -1,320 +1,209 @@
-
-
-
-
-
-
 import React from "react";
 import DashboardCard from "../components/DashboardCard";
-import { useAuth } from '../hooks/useAuth';
-import { UserRole } from '../types';
-import { useNavigate } from 'react-router-dom';
+import { useAuth } from "../hooks/useAuth";
+import { UserRole } from "../types";
+import { useNavigate } from "react-router-dom";
 import {
   FileText,
   ListChecks,
-  FolderKanban,
-  Users,
-  Archive,
-  ShieldAlert,
   UserCog,
-  ClipboardList,
-  LifeBuoy,
+  LayoutDashboard,
+  BrainCircuit,
+  Zap,
+  Target,
+  MapPin,
+  AlertTriangle,
   ShieldCheck,
-  SlidersHorizontal,
-  BarChart3,
-  DollarSign,
-  BookCopy,
   Wrench,
-  Library,
-  ClipboardCheck,
-  TowerControl,
-  ShieldQuestion,
-  Network,
-  Handshake,
-  Map,
+  Cog,
   Bug,
-  AlertCircle,
-  Mail,
   GanttChartSquare,
 } from "lucide-react";
 
 const DashboardPage: React.FC = () => {
   const navigate = useNavigate();
-  const { hasRole } = useAuth();
+  const { hasRole, user } = useAuth();
 
-  const handleCardClick = (route: string) => {
-    if (route) {
-      navigate(route);
-    }
-  };
+  const role = user?.profile.role;
+  const isRegional = [
+    "coordenador_utl_regional",
+    "gestor_operacao_provincial",
+    "tecnico_operacao_provincial",
+  ].includes(role || "");
 
   const modules = [
-    { 
-      title: "Relatórios", 
-      icon: FileText, 
+    {
+      title: "Dashboard",
+      icon: BrainCircuit,
       color: "blue",
-      category: "Planeamento Estratégico",
-      description: "Crie, visualize e exporte relatórios mensais de atividades.",
-      allowedRoles: ['administrador', 'gestor'],
-      route: "/relatorios"
+      description:
+        "Centro unificado de gestão estratégica e supervisão operacional nacional.",
+      allowedRoles: ["administrador", "coordenador_operacional_central"],
+      route: "/coordenacao-central",
     },
-    { 
-      title: "Termos de Referência",
-      icon: ClipboardList, 
-      color: "orange",
-      category: "Planeamento Estratégico",
-      description: "Elabore e gira propostas formais para projetos e aquisições.",
-      allowedRoles: ['administrador', 'gestor'],
-      route: "/termos-de-referencia",
-      hidden: true
+    {
+      title: "Coordenação Regional",
+      icon: MapPin,
+      color: "blue",
+      description: `Supervisão de processos e validação de procedimentos da província de ${user?.province}.`,
+      allowedRoles: ["administrador", "coordenador_utl_regional"],
+      route: "/coordenacao-regional",
     },
-    { 
-      title: "Plano de Ação", 
-      icon: ClipboardCheck, 
+    {
+      title: "Monitorização Operacional",
+      icon: LayoutDashboard,
+      color: "sky",
+      description: "Telemetria e KPIs táticos em tempo real.",
+      allowedRoles: ["administrador", "coordenador_central"],
+      route: "/gestao-operacional",
+    },
+    {
+      title: "Relatórios",
+      icon: FileText,
       color: "purple",
-      category: "Planeamento Estratégico",
-      description: "Planeje, registe e acompanhe planos de ação coordenados.",
-      allowedRoles: ['administrador', 'gestor'],
-      route: "/plano-de-acao"
+      description:
+        "Crie, visualize e exporte relatórios mensais de atividades.",
+      allowedRoles: [
+        "administrador",
+        "coordenador_operacional_central",
+        "tecnico_operacional_central",
+        "gestor_operacao_provincial",
+        "tecnico_operacao_provincial",
+      ],
+      route: "/relatorios",
     },
-    { 
-      title: "Atividades", 
-      icon: ListChecks, 
-      color: "green",
-      category: "Gestão Operacional",
-      description: "Registe e acompanhe todas as missões de fiscalização e tarefas.",
-      allowedRoles: ['administrador', 'gestor', 'tecnico_op', 'tecnico_si'],
-      route: "/atividades"
-    },
-    { 
-      title: "Projetos", 
-      icon: FolderKanban, 
-      color: "violet",
-      category: "Gestão Operacional",
-      description: "Organize e monitorize o progresso dos projetos em formato Kanban.",
-      allowedRoles: ['administrador', 'gestor', 'tecnico_op', 'tecnico_si'],
-      route: "/projetos",
-      hidden: true
-    },
-    { 
-      title: "Ordens de Serviço", 
+    {
+      title: "Ordens Operativas",
       icon: Wrench,
-      color: "indigo",
-      category: "Gestão Operacional",
-      description: "Crie e monitorize ordens de serviço para manutenção e outras tarefas.",
-      allowedRoles: ['administrador', 'gestor', 'tecnico_op', 'tecnico_si'],
+      color: "amber",
+      description:
+        "Gestão técnica, missões táticas e ordens de intervenção operativa.",
+      allowedRoles: [
+        "administrador",
+        "coordenador_operacional_central",
+        "tecnico_si",
+      ],
       route: "/ordens-de-servico",
-      hidden: true
     },
-    { 
-      title: "Postos Fronteiriços", 
-      icon: TowerControl,
+    {
+      title: "Atividades",
+      icon: ListChecks,
+      color: "green",
+      description:
+        "Gestão e acompanhamento de missões operacionais provinciais.",
+      allowedRoles: [
+        "administrador",
+        "coordenador_operacional_central",
+        "tecnico_operacional_central",
+        "gestor_operacao_provincial",
+        "tecnico_operacao_provincial",
+      ],
+      route: "/atividades",
+    },
+    {
+      title: "Plano de Acção",
+      icon: Target,
+      color: "indigo",
+      description: "Acompanhamento de metas e diretrizes estratégicas.",
+      allowedRoles: ["administrador", "coordenador_operacional_central"],
+      route: "/plano-de-acao",
+    },
+    {
+      title: "Suporte e Ocorrências",
+      icon: AlertTriangle,
+      color: "rose",
+      description: "Registo de incidentes e pedidos de suporte à Central.",
+      allowedRoles: [
+        "administrador",
+        "coordenador_utl_regional",
+        "gestor_operacao_provincial",
+      ],
+      route: "/ocorrencias",
+    },
+    {
+      title: "Administração",
+      icon: UserCog,
+      color: "red",
+      description: "Configuração de acessos e perfis do sistema.",
+      allowedRoles: ["administrador"],
+      route: "/utilizadores",
+    },
+    {
+      title: "Configuração",
+      icon: Cog,
+      color: "lime",
+      description: "Configuração do sistema.",
+      allowedRoles: ["administrador"],
+      route: "/configuracoes",
+    },
+    {
+      title: "Bugs",
+      icon: Bug,
       color: "teal",
-      category: "Gestão Operacional",
-      description: "Gira dados dos postos e pontos fronteiriços (tipo, localização, status).",
-      allowedRoles: ['administrador', 'gestor', 'tecnico_op', 'tecnico_si'],
-      route: "/postos-fronteiricos",
-      hidden: true
+      description: "Configuração do Bug.",
+      allowedRoles: ["administrador"],
+      route: "/bugs",
     },
-    { 
+    {
       title: "Procedimento GMA",
       icon: GanttChartSquare,
-      color: "rose",
-      category: "Gestão Operacional",
-      description: "Procedimentos para Grupos Móveis de Fiscalização e Ações.",
-      allowedRoles: ['administrador', 'gestor', 'tecnico_op'],
-      route: "/procedimento-gma"
-    },
-    { 
-      title: "Gestão de Risco e Fiscalização", 
-      icon: ShieldQuestion, 
       color: "amber",
       category: "Gestão Operacional",
-      description: "Monitore operações conjuntas, riscos e medidas aplicadas.",
-      allowedRoles: ['administrador', 'gestor'],
-      route: "/gestao-de-risco",
-      hidden: true
-    },
-    { 
-      title: "Análise Geoespacial (GIS)", 
-      icon: Map, 
-      color: "cyan",
-      category: "Análise e Inteligência",
-      description: "Visualize dados operacionais num mapa interativo para análise geoespacial.",
-      allowedRoles: ['administrador', 'gestor'],
-      route: "/gis",
-      hidden: true
-    },
-     { 
-      title: "Análises e Estatísticas", 
-      icon: BarChart3, 
-      color: "sky",
-      category: "Análise e Inteligência",
-      description: "Visualize dados operacionais através de gráficos e KPIs interativos.",
-      allowedRoles: ['administrador', 'gestor'],
-      route: "/analises",
-      hidden: true
-    },
-    { 
-      title: "Recursos Humanos", 
-      icon: Users, 
-      color: "emerald",
-      category: "Administrativo",
-      description: "Consulte informações sobre os colaboradores e a estrutura da organização.",
-      allowedRoles: ['administrador', 'gestor'],
-      route: "/rh",
-      hidden: true
-    },
-    { 
-      title: "Orçamento e Finanças", 
-      icon: DollarSign, 
-      color: "lime",
-      category: "Administrativo",
-      description: "Gira orçamentos, recursos, receitas, despesas e relatórios financeiros.",
-      allowedRoles: ['administrador', 'gestor'],
-      route: "/financeiro",
-      hidden: true
-    },
-    { 
-      title: "Contabilidade", 
-      icon: BookCopy, 
-      color: "pink",
-      category: "Administrativo",
-      description: "Plano de contas, lançamentos e balancetes contabilísticos.",
-      allowedRoles: ['administrador', 'gestor'],
-      route: "/contabilidade",
-      hidden: true
-    },
-    { 
-      title: "Património e Meios", 
-      icon: Archive, 
-      color: "slate",
-      category: "Administrativo",
-      description: "Inventarie e controle todos os ativos, viaturas e equipamentos.",
-      allowedRoles: ['administrador', 'tecnico_op', 'tecnico_si'],
-      route: "/patrimonio-e-meios",
-      hidden: true
-    },
-    { 
-      title: "Órgãos e Composição", 
-      icon: Library, 
-      color: "sky",
-      category: "Administrativo",
-      description: "Cadastre entidades do CGCF (Ministérios, Serviços, Direções).",
-      allowedRoles: ['administrador', 'gestor'],
-      route: "/orgaos-e-composicao",
-      hidden: true
-    },
-    { 
-      title: "Observadores e Parceiros", 
-      icon: Handshake, 
-      color: "fuchsia",
-      category: "Administrativo",
-      description: "Registe entidades externas com acesso supervisionado ao sistema.",
-      allowedRoles: ['administrador', 'gestor'],
-      route: "/observadores-e-parceiros",
-      hidden: true
-    },
-    { 
-      title: "Ocorrências / Suporte", 
-      icon: AlertCircle, 
-      color: "yellow",
-      category: "Suporte",
-      description: "Abra e gira tickets de suporte para problemas técnicos e operacionais.",
-      allowedRoles: ['administrador', 'gestor', 'tecnico_op', 'tecnico_si'],
-      route: "/ocorrencias",
-      hidden: true
-    },
-    { 
-      title: "Gestão de Bugs", 
-      icon: Bug, 
-      color: "zinc",
-      category: "Suporte",
-      description: "Registe, priorize e acompanhe bugs e falhas do sistema.",
-      allowedRoles: ['administrador', 'tecnico_si'],
-      route: "/bugs",
-      hidden: true
-    },
-    { 
-      title: "Comunicações SMS/Email", 
-      icon: Mail, 
-      color: "neutral",
-      category: "Suporte",
-      description: "Envie e monitorize comunicações por SMS e Email.",
-      allowedRoles: ['administrador', 'tecnico_si'],
-      route: "/sms-email",
-      hidden: true
-    },
-    { 
-      title: "Gestão de Crises", 
-      icon: LifeBuoy, 
-      color: "red",
-      category: "Controlo",
-      description: "Planos de contingência, simulações e gestão de incidentes críticos.",
-      allowedRoles: ['administrador', 'gestor'],
-      route: "/gestao-crises",
-      hidden: true
-    },
-     { 
-      title: "Segurança e Acessos", 
-      icon: ShieldCheck, 
-      color: "stone",
-      category: "Controlo",
-      description: "Controle permissões, monitore acessos e audite atividades do sistema.",
-      allowedRoles: ['administrador'],
-      route: "/seguranca-auditoria",
-      hidden: true
-    },
-    { 
-      title: "Gestão de Ameaças Cibernéticas", 
-      icon: ShieldAlert, 
-      color: "rose",
-      category: "Controlo",
-      description: "Monitore, analise e responda a ameaças à segurança da informação.",
-      allowedRoles: ['administrador', 'tecnico_si'],
-      route: "/ameacas-ciberneticas",
-      hidden: true
-    },
-    { 
-      title: "Comunicação Interinstitucional", 
-      icon: Network, 
-      color: "gray",
-      category: "Controlo",
-      description: "Centralize comunicações entre órgãos (migração, polícia, saúde, etc).",
-      allowedRoles: ['administrador', 'gestor'],
-      route: "/comunicacao-interinstitucional",
-      hidden: true
-    },
-    { 
-      title: "Configuração do Sistema", 
-      icon: SlidersHorizontal, 
-      color: "light-blue",
-      category: "Controlo",
-      description: "Gira parâmetros, módulos, automações e integrações do SGO.",
-      allowedRoles: ['administrador', 'tecnico_si'],
-      route: "/configuracoes",
-      hidden: true
-    },
-    { 
-      title: "Utilizadores e Perfis", 
-      icon: UserCog, 
-      color: "dark-green",
-      category: "Controlo",
-      description: "Administre as contas de utilizador e os seus níveis de permissão.",
-      allowedRoles: ['administrador'],
-      route: "/utilizadores"
+      description: "Procedimentos para Grupos Móveis de Fiscalização e Ações.",
+      allowedRoles: [
+        "administrador",
+        "coordenador_central",
+        "coordenador_operacional_central",
+        "tecnico_operacional_central",
+        "tecnico_operacao_provincial",
+        "tecnico_si",
+        "coordenador_utl_regional",
+      ],
+      route: "/procedimento-gma",
     },
   ];
 
   const accessibleModules = modules
-    .filter(module => 
-      !(module as any).hidden && module.allowedRoles.some(role => hasRole(role as UserRole))
+    .filter((module) =>
+      module.allowedRoles.some((role) => hasRole(role as UserRole)),
     )
     .sort((a, b) => a.title.localeCompare(b.title));
 
   return (
-    <>
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6 pt-4">
+    <div className="w-full">
+      {isRegional && (
+        <div className="mb-8 bg-blue-900 text-white p-6 rounded-[2rem] shadow-xl flex items-center justify-between border-4 border-blue-800/50">
+          <div>
+            <h2 className="text-2xl font-black uppercase tracking-tight">
+              UTL {user?.province}
+            </h2>
+            <p className="text-blue-200 text-sm font-bold uppercase tracking-widest mt-1 opacity-80">
+              Console de Comando Regional Ativo
+            </p>
+          </div>
+          <div className="p-4 bg-white/10 rounded-2xl">
+            <MapPin size={32} className="text-yellow-400" />
+          </div>
+        </div>
+      )}
+
+      {role === "coordenador_central" && (
+        <div className="mb-8 bg-gradient-to-r from-slate-800 to-slate-900 text-white p-6 rounded-[2rem] shadow-xl flex items-center justify-between border-4 border-slate-700/50">
+          <div>
+            <h2 className="text-2xl font-black uppercase tracking-tight">
+              Gabinete de Coordenação Central
+            </h2>
+            <p className="text-blue-200 text-sm font-bold uppercase tracking-widest mt-1 opacity-80">
+              Perfil de Visualização e Monitorização Nacional
+            </p>
+          </div>
+          <div className="p-4 bg-white/10 rounded-2xl">
+            <ShieldCheck size={32} className="text-yellow-400" />
+          </div>
+        </div>
+      )}
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
         {accessibleModules.map((module, index) => (
           <DashboardCard
             key={index}
@@ -322,11 +211,11 @@ const DashboardPage: React.FC = () => {
             icon={module.icon}
             color={module.color}
             description={module.description}
-            onClick={() => handleCardClick(module.route)}
+            onClick={() => navigate(module.route)}
           />
         ))}
       </div>
-    </>
+    </div>
   );
 };
 

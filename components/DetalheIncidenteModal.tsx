@@ -43,7 +43,7 @@ const DetalheIncidenteModal: React.FC<DetalheIncidenteModalProps> = ({ isOpen, o
                  <span className={`px-3 py-1 inline-flex items-center text-xs font-semibold rounded-full bg-blue-100 text-blue-800`}>
                     {incident.status}
                 </span>
-                <button onClick={onClose} className="p-2 rounded-full hover:bg-gray-200">
+                <button title="Fechar" onClick={onClose} className="p-2 rounded-full hover:bg-gray-200">
                     <X className="h-5 w-5 text-gray-600" />
                 </button>
             </div>
@@ -70,7 +70,7 @@ const DetalheIncidenteModal: React.FC<DetalheIncidenteModalProps> = ({ isOpen, o
                  <label htmlFor="new-log-entry" className="block text-base font-medium text-gray-700 mb-2">Adicionar Nova Entrada</label>
                  <div className="flex items-center space-x-2">
                     <textarea name="new-log-entry" id="new-log-entry" rows={2} className="flex-grow block w-full rounded-md border-gray-300 shadow-sm sm:text-base" required />
-                    <button type="submit" className="bg-blue-600 hover:bg-blue-700 text-white font-semibold p-3 rounded-lg flex items-center justify-center self-stretch">
+                    <button title="Adicionar Entrada de Log" type="submit" className="bg-blue-600 hover:bg-blue-700 text-white font-semibold p-3 rounded-lg flex items-center justify-center self-stretch">
                         <Plus className="h-5 w-5"/>
                     </button>
                  </div>

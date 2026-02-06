@@ -1,4 +1,5 @@
-import React, { useState, useMemo } from 'react';
+
+import React, { useState, useMemo, useEffect } from 'react';
 import { X, MapPin, ChevronLeft, ChevronRight, DollarSign, ClipboardCheck } from 'lucide-react';
 
 interface NovaAtividadeModalProps {
@@ -6,6 +7,7 @@ interface NovaAtividadeModalProps {
   onClose: () => void;
   onSave: (data: any) => void;
   planosDeAcao: { id: string; title: string; }[];
+  activityToEdit?: any | null;
 }
 
 const mockEmployeesForSelect = [
@@ -89,13 +91,26 @@ const Calendar: React.FC<{
   );
 };
 
-const NovaAtividadeModal: React.FC<NovaAtividadeModalProps> = ({ isOpen, onClose, onSave, planosDeAcao }) => {
+const NovaAtividadeModal: React.FC<NovaAtividadeModalProps> = ({ isOpen, onClose, onSave, planosDeAcao, activityToEdit }) => {
   const [startDate, setStartDate] = useState<Date | null>(new Date());
   const [endDate, setEndDate] = useState<Date | null>(new Date(new Date().setDate(new Date().getDate() + 1)));
   const [startDisplayDate, setStartDisplayDate] = useState(new Date());
   const [endDisplayDate, setEndDisplayDate] = useState(new Date());
   const [province, setProvince] = useState('');
   const [gma, setGma] = useState('');
+  
+  // State for controlled inputs to handle edit mode pre-filling
+  const [title, setTitle] = useState('');
+  const [type, setType] = useState('');
+  const [vessel, setVessel] = useState('');
+  const [responsible, setResponsible] = useState('');
+  const [planoAcaoId, setPlanoAcaoId] = useState('');
+  const [cost, setCost] = useState('');
+  const [coordinates, setCoordinates] = useState('');
+  const [teamMembers, setTeamMembers] = useState<string[]>([]);
+  const [objectives, setObjectives] = useState('');
+
+  const isEditMode = !!activityToEdit;
 
   const gmaMap: { [key: string]: string } = {
     'Cabinda': 'GMA CABINDA',
@@ -113,6 +128,68 @@ const NovaAtividadeModal: React.FC<NovaAtividadeModalProps> = ({ isOpen, onClose
   };
   const provinces = Object.keys(gmaMap);
 
+  // Helper to parse "DD/MM/YYYY" to Date object
+  const parseDateString = (dateStr: string) => {
+      if(!dateStr) return new Date();
+      const parts = dateStr.split('/');
+      if (parts.length === 3) {
+          return new Date(parseInt(parts[2], 10), parseInt(parts[1], 10) - 1, parseInt(parts[0], 10));
+      }
+      return new Date();
+  };
+
+  useEffect(() => {
+      if (isOpen) {
+          if (isEditMode && activityToEdit) {
+              setTitle(activityToEdit.title || '');
+              setType(activityToEdit.type || '');
+              setVessel(activityToEdit.vessel || '');
+              setResponsible(activityToEdit.responsible || '');
+              setPlanoAcaoId(activityToEdit.planoAcaoId || '');
+              setCost(activityToEdit.cost || '');
+              setCoordinates(activityToEdit.coordinates || '');
+              setProvince(activityToEdit.province || '');
+              setGma(gmaMap[activityToEdit.province] || '');
+              
+              const start = parseDateString(activityToEdit.startDate);
+              setStartDate(start);
+              setStartDisplayDate(start);
+
+              const end = parseDateString(activityToEdit.endDate);
+              setEndDate(end);
+              setEndDisplayDate(end);
+
+              if (activityToEdit.equipa && Array.isArray(activityToEdit.equipa)) {
+                  setTeamMembers(activityToEdit.equipa.map((m: any) => m.nome));
+              } else {
+                  setTeamMembers([]);
+              }
+
+              if (activityToEdit.objectives && Array.isArray(activityToEdit.objectives)) {
+                  setObjectives(activityToEdit.objectives.join('\n'));
+              } else {
+                  setObjectives('');
+              }
+
+          } else {
+              // Reset for creation mode
+              setTitle('');
+              setType('');
+              setVessel('');
+              setResponsible('');
+              setPlanoAcaoId('');
+              setCost('');
+              setCoordinates('');
+              setProvince('');
+              setGma('');
+              setStartDate(new Date());
+              setEndDate(new Date(new Date().setDate(new Date().getDate() + 1)));
+              setTeamMembers([]);
+              setObjectives('');
+          }
+      }
+  }, [isOpen, isEditMode, activityToEdit]);
+
   const handleProvinceChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedProvince = e.target.value;
     setProvince(selectedProvince);
@@ -125,22 +202,22 @@ const NovaAtividadeModal: React.FC<NovaAtividadeModalProps> = ({ isOpen, onClose
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const formData = new FormData(e.currentTarget);
-    const selectedTeamMembers = formData.getAll('team-members') as string[];
     const newActivity = {
-        title: formData.get('mission-title'),
-        type: formData.get('mission-type'),
+        id: activityToEdit?.id, // Preserve ID if editing
+        title: title,
+        type: type,
         province: province,
         gma: gma,
-        vessel: formData.get('vessel'),
-        responsible: formData.get('responsible'),
-        cost: formData.get('mission-cost'),
-        coordinates: formData.get('coordinates'),
-        equipa: selectedTeamMembers.map(name => ({ nome: name.trim(), cargo: 'Membro' })),
-        objectives: (formData.get('mission-objective') as string).split('\n'),
+        vessel: vessel,
+        responsible: responsible,
+        cost: cost,
+        coordinates: coordinates,
+        equipa: teamMembers.map(name => ({ nome: name.trim(), cargo: 'Membro' })),
+        objectives: objectives.split('\n').filter(o => o.trim() !== ''),
         startDate: startDate ? startDate.toLocaleDateString('pt-AO') : '',
         endDate: endDate ? endDate.toLocaleDateString('pt-AO') : '',
-        planoAcaoId: formData.get('planoAcaoId')
+        planoAcaoId: planoAcaoId,
+        status: activityToEdit ? activityToEdit.status : 'Planeada' // Preserve status or default
     };
     onSave(newActivity);
     onClose();
@@ -153,7 +230,7 @@ const NovaAtividadeModal: React.FC<NovaAtividadeModalProps> = ({ isOpen, onClose
         onClick={(e) => e.stopPropagation()}
       >
         <div className="sticky top-0 bg-white px-6 py-4 border-b flex justify-between items-center z-30">
-          <h2 className="text-xl font-bold text-gray-800">Nova Missão de Fiscalização</h2>
+          <h2 className="text-xl font-bold text-gray-800">{isEditMode ? 'Editar Missão' : 'Nova Missão de Fiscalização'}</h2>
           <button onClick={onClose} className="p-2 rounded-full hover:bg-gray-200">
             <X className="h-5 w-5 text-gray-600" />
           </button>
@@ -163,24 +240,28 @@ const NovaAtividadeModal: React.FC<NovaAtividadeModalProps> = ({ isOpen, onClose
             {/* Título da Missão */}
             <div>
               <label htmlFor="mission-title" className="block text-base font-medium text-gray-700">Título da Missão</label>
-              <input type="text" id="mission-title" name="mission-title" placeholder="Ex: Fiscalização Costa Norte" className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-base" />
+              <input type="text" id="mission-title" value={title} onChange={e => setTitle(e.target.value)} placeholder="Ex: Fiscalização Costa Norte" className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-base" required />
             </div>
 
             {/* Tipo de Missão */}
             <div>
               <label htmlFor="mission-type" className="block text-base font-medium text-gray-700">Tipo de Missão</label>
-              <select id="mission-type" name="mission-type" className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-base">
-                <option>Selecione o tipo</option>
+              <select id="mission-type" value={type} onChange={e => setType(e.target.value)} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-base">
+                <option value="">Selecione o tipo</option>
                 <option>Marítima</option>
                 <option>Terrestre</option>
                 <option>Aérea</option>
+                <option>Técnica/IT</option>
+                <option>Administrativa</option>
+                <option>Formação</option>
+                <option>Científica</option>
               </select>
             </div>
 
             {/* Província */}
             <div>
               <label htmlFor="province" className="block text-base font-medium text-gray-700">Província</label>
-              <select id="province" name="province" value={province} onChange={handleProvinceChange} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-base">
+              <select id="province" value={province} onChange={handleProvinceChange} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-base">
                 <option value="">Selecione a província</option>
                 {provinces.map(p => <option key={p} value={p}>{p}</option>)}
               </select>
@@ -189,30 +270,37 @@ const NovaAtividadeModal: React.FC<NovaAtividadeModalProps> = ({ isOpen, onClose
             {/* GMA */}
             <div>
               <label htmlFor="gma" className="block text-base font-medium text-gray-700">GMA</label>
-              <input type="text" id="gma" name="gma" value={gma} readOnly className="mt-1 block w-full rounded-md border-gray-300 shadow-sm sm:text-base bg-gray-100" />
+              <input type="text" id="gma" value={gma} readOnly className="mt-1 block w-full rounded-md border-gray-300 shadow-sm sm:text-base bg-gray-100" />
             </div>
 
             {/* Tipo de meio */}
             <div>
               <label htmlFor="vessel" className="block text-base font-medium text-gray-700">Tipo de meio</label>
-              <input type="text" id="vessel" name="vessel" placeholder="Ex: Patrulha Angola I" className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-base" />
+              <input type="text" id="vessel" value={vessel} onChange={e => setVessel(e.target.value)} placeholder="Ex: Patrulha Angola I" className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-base" />
             </div>
 
             {/* Responsável */}
             <div>
                 <label htmlFor="responsible" className="block text-base font-medium text-gray-700">Responsável</label>
-                <select id="responsible" name="responsible" className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-base">
-                    <option>Selecione o responsável</option>
+                <select id="responsible" value={responsible} onChange={e => setResponsible(e.target.value)} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-base">
+                    <option value="">Selecione o responsável</option>
                     <option>Cmdt. Manuel Santos</option>
                     <option>Técnico A</option>
+                    <option>Técnico B</option>
                     <option>Gestor 1</option>
+                    <option>Gestor 2</option>
+                    <option>Dra. Sofia Lima</option>
+                    <option>Biólogo Chefe</option>
+                    <option>Direção Geral</option>
+                    <option>Recursos Humanos</option>
+                    <option>Chefe de Equipa Bravo</option>
                 </select>
             </div>
             
             {/* Plano de Ação */}
             <div>
                 <label htmlFor="planoAcaoId" className="block text-base font-medium text-gray-700">Plano de Ação (Opcional)</label>
-                <select id="planoAcaoId" name="planoAcaoId" className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-base">
+                <select id="planoAcaoId" value={planoAcaoId} onChange={e => setPlanoAcaoId(e.target.value)} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-base">
                     <option value="">Nenhum</option>
                     {planosDeAcao.map(plano => (
                         <option key={plano.id} value={plano.id}>{plano.title}</option>
@@ -230,7 +318,8 @@ const NovaAtividadeModal: React.FC<NovaAtividadeModalProps> = ({ isOpen, onClose
                 <input 
                     type="text" 
                     id="mission-cost"
-                    name="mission-cost"
+                    value={cost}
+                    onChange={e => setCost(e.target.value)}
                     placeholder="Ex: 150.000,00" 
                     className="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-base pl-10" 
                 />
@@ -244,17 +333,18 @@ const NovaAtividadeModal: React.FC<NovaAtividadeModalProps> = ({ isOpen, onClose
                 <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
                   <MapPin className="h-5 w-5 text-gray-400" />
                 </div>
-                <input type="text" id="coordinates" name="coordinates" placeholder="Ex: -8.8° S, 13.2° E" className="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-base pl-10" />
+                <input type="text" id="coordinates" value={coordinates} onChange={e => setCoordinates(e.target.value)} placeholder="Ex: -8.8° S, 13.2° E" className="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-base pl-10" />
               </div>
             </div>
             
             {/* Membros da Equipa */}
             <div className="md:col-span-2">
-              <label htmlFor="team-members" className="block text-base font-medium text-gray-700">Membros da Equipa</label>
+              <label htmlFor="team-members" className="block text-base font-medium text-gray-700">Membros da Equipa (Segure Ctrl para múltiplos)</label>
                <select 
                   id="team-members" 
-                  name="team-members" 
                   multiple 
+                  value={teamMembers}
+                  onChange={e => setTeamMembers(Array.from(e.target.selectedOptions, option => (option as HTMLOptionElement).value))}
                   className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-base h-32"
               >
                   {mockEmployeesForSelect.map(emp => (
@@ -265,8 +355,8 @@ const NovaAtividadeModal: React.FC<NovaAtividadeModalProps> = ({ isOpen, onClose
 
             {/* Objetivo da Missão */}
             <div className="md:col-span-2">
-              <label htmlFor="mission-objective" className="block text-base font-medium text-gray-700">Objetivo da Missão</label>
-              <textarea id="mission-objective" name="mission-objective" rows={4} placeholder="Descreva o objetivo e escopo da missão..." className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-base"></textarea>
+              <label htmlFor="mission-objective" className="block text-base font-medium text-gray-700">Objetivos da Missão (Um por linha)</label>
+              <textarea id="mission-objective" value={objectives} onChange={e => setObjectives(e.target.value)} rows={4} placeholder="Descreva os objetivos..." className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-base"></textarea>
             </div>
 
             {/* Calendários */}
@@ -297,7 +387,7 @@ const NovaAtividadeModal: React.FC<NovaAtividadeModalProps> = ({ isOpen, onClose
               Cancelar
             </button>
             <button type="submit" className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg shadow-sm transition-colors">
-              Criar Missão
+              {isEditMode ? 'Salvar Alterações' : 'Criar Missão'}
             </button>
           </div>
         </form>

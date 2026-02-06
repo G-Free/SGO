@@ -93,15 +93,15 @@ const PerfilPage: React.FC = () => {
                                 <h3 className="text-lg font-bold text-gray-800 mb-4">Alterar Palavra-passe</h3>
                                 <div>
                                     <label className="block text-sm font-medium text-gray-700">Palavra-passe Atual</label>
-                                    <input type="password" className="mt-1 block w-full rounded-md border-gray-300 shadow-sm sm:text-base" />
+                                    <input title="Palavra-passe atual" type="password" className="mt-1 block w-full rounded-md border-gray-300 shadow-sm sm:text-base" />
                                 </div>
                                 <div>
                                     <label className="block text-sm font-medium text-gray-700">Nova Palavra-passe</label>
-                                    <input type="password" className="mt-1 block w-full rounded-md border-gray-300 shadow-sm sm:text-base" />
+                                    <input title="Nova palavra-passe" type="password" className="mt-1 block w-full rounded-md border-gray-300 shadow-sm sm:text-base" />
                                 </div>
                                 <div>
                                     <label className="block text-sm font-medium text-gray-700">Confirmar Nova Palavra-passe</label>
-                                    <input type="password" className="mt-1 block w-full rounded-md border-gray-300 shadow-sm sm:text-base" />
+                                    <input title="Confirmar nova palavra-passe" type="password" className="mt-1 block w-full rounded-md border-gray-300 shadow-sm sm:text-base" />
                                 </div>
                                 <div className="flex justify-end">
                                     <button className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg flex items-center">

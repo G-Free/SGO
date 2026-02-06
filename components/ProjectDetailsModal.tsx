@@ -46,7 +46,7 @@ const ProjectDetailsModal: React.FC<ProjectDetailsModalProps> = ({ isOpen, onClo
             <h2 className="text-xl font-bold text-gray-800">{project.title}</h2>
             <p className="text-sm text-gray-500">ID do Projeto: {project.id}</p>
           </div>
-          <button onClick={onClose} className="p-2 rounded-full hover:bg-gray-200">
+          <button title="Fechar" onClick={onClose} className="p-2 rounded-full hover:bg-gray-200">
             <X className="h-5 w-5 text-gray-600" />
           </button>
         </div>

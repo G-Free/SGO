@@ -1,98 +1,141 @@
-// FIX: Updated component to use React.PropsWithChildren for better type safety with children props.
-import React, { createContext, useContext, useState, ReactNode, PropsWithChildren } from 'react';
-import { User, UserRole, AuthContextType, Organization, Profile } from '../types';
+import React, {
+  createContext,
+  useContext,
+  useState,
+  PropsWithChildren,
+} from "react";
+import {
+  User,
+  UserRole,
+  AuthContextType,
+  Organization,
+  Profile,
+} from "../types";
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-// Mock database based on SQL schema
 const mockOrganizations: Organization[] = [
-    { id: 1, name: 'SGA - Sociedade Gestora de Aeroportos' },
-    { id: 2, name: 'CGCF - Comité de Gestão Coordenada de Fronteiras' }
+  { id: 1, name: "SGA - Sociedade Gestora de Aeroportos" },
+  { id: 2, name: "CGCF - Comité de Gestão Coordenada de Fronteiras" },
 ];
 
 const mockProfiles: Profile[] = [
-    { id: 1, name: 'Administrador', role: 'administrador', description: 'Acesso total ao sistema, incluindo gestão completa.' },
-    { id: 2, name: 'Gestor Operacional', role: 'gestor', description: 'Pode gerir usuários da própria organização e consultar relatórios.' },
-    { id: 3, name: 'Técnico de Sistema de Informação', role: 'tecnico_si', description: 'Gerencia a infraestrutura de TI, sistemas e segurança da informação.' },
-    { id: 4, name: 'Usuário Padrão', role: 'padrao', description: 'Acesso básico, restrito a consultas e ações simples.' },
-    { id: 5, name: 'Visitante / Auditor', role: 'consultor', description: 'Acesso somente de leitura, sem alterações.' },
-    { id: 10, name: 'Técnico de Operação', role: 'tecnico_op', description: 'Executa atividades de campo, fiscalização e operações diárias.' },
-];
-
-// Omit<User, ...> helps define the raw user data before joining with organization and profile.
-const mockUsers: (Omit<User, 'organization'|'profile'> & { password: string, organization_id: number, profile_id: number })[] = [
-  { 
+  {
     id: 1,
-    username: 'Geiger Carlos',
-    email: 'glcarlos@sga.co.ao',
-    password: 'siif2024',
-    organization_id: 1,
-    profile_id: 1
+    name: "Administrador do System",
+    role: "administrador",
+    description: "Gestão técnica total.",
   },
   {
     id: 2,
-    username: 'Gestor de Operações',
-    email: 'gestor@sgo.cgcf.gov.ao',
-    password: 'siif2024',
-    organization_id: 2,
-    profile_id: 2
+    name: "Coordenador Central",
+    role: "coordenador_central",
+    description:
+      "Autoridade superior nacional. Acesso exclusivo para monitorização tática.",
   },
   {
     id: 3,
-    username: 'Técnico de Operação',
-    email: 'tecnico.op@sgo.cgcf.gov.ao',
-    password: 'siif2024',
-    organization_id: 2,
-    profile_id: 10 // Técnico de Operação
+    name: "Coordenador Operacional Central",
+    role: "coordenador_operacional_central",
+    description: "Supervisão operacional nacional e aprovações.",
   },
   {
     id: 4,
-    username: 'Usuario Padrão',
-    email: 'padrao@sgo.cgcf.gov.ao',
-    password: 'siif2024',
-    organization_id: 2,
-    profile_id: 4
+    name: "Técnico Central Operacional",
+    role: "tecnico_operacional_central",
+    description: "Execução técnica central.",
   },
   {
     id: 5,
-    username: 'Auditor Externo',
-    email: 'auditor@sgo.cgcf.gov.ao',
-    password: 'siif2024',
-    organization_id: 2,
-    profile_id: 5
+    name: "Técnico de SI",
+    role: "tecnico_si",
+    description: "Suporte técnico de TI.",
   },
   {
     id: 6,
-    username: 'Gestor CGCF',
-    email: 'gestor.cgcf@sgo.gov.ao',
-    password: 'siif2024',
-    organization_id: 2,
-    profile_id: 2 // gestor
+    name: "Coordenador da UTL Regional",
+    role: "coordenador_utl_regional",
+    description: "Supervisão Provincial.",
   },
   {
     id: 7,
-    username: 'Técnico de Sistema de Informação',
-    email: 'tecnico.si@sgo.gov.ao',
-    password: 'siif2024',
-    organization_id: 2,
-    profile_id: 3 // Técnico de Sistema de Informação
+    name: "Gestor de Operação Provincial",
+    role: "gestor_operacao_provincial",
+    description: "Tático Regional.",
   },
   {
     id: 8,
-    username: 'Padrão CGCF',
-    email: 'padrao.cgcf@sgo.gov.ao',
-    password: 'siif2024',
-    organization_id: 2,
-    profile_id: 4 // padrao
+    name: "Técnico de Operação Regional",
+    role: "tecnico_operacao_provincial",
+    description: "Base Regional.",
+  },
+];
+
+const mockUsers: (Omit<User, "organization" | "profile"> & {
+  password: string;
+  organization_id: number;
+  profile_id: number;
+  province?: string;
+})[] = [
+  {
+    id: 1,
+    username: "GeigerCarlos",
+    email: "glcarlos@cgcf.gov.ao",
+    password: "siif2024",
+    organization_id: 1,
+    profile_id: 1,
   },
   {
-    id: 9,
-    username: 'Consultor CGCF',
-    email: 'consultor.cgcf@sgo.gov.ao',
-    password: 'siif2024',
+    id: 2,
+    username: "Coordenador_Central",
+    email: "coordenadorcentral@cgcf.gov.ao",
+    password: "siif2024",
     organization_id: 2,
-    profile_id: 5 // consultor
-  }
+    profile_id: 3,
+  },
+  {
+    id: 3,
+    username: "CoordLuanda",
+    email: "coord.luanda@cgcf.gov.ao",
+    password: "siif2024",
+    organization_id: 2,
+    profile_id: 6,
+    province: "Luanda",
+  },
+  {
+    id: 7,
+    username: "Secretariado_Central",
+    email: "SecretariadoCentral@cgcf.gov.ao",
+    password: "siif2024",
+    organization_id: 2,
+    profile_id: 2,
+  }, // NOVO USUÁRIO PCA
+  {
+    id: 4,
+    username: "GestorCabinda",
+    email: "gestor.cabinda@cgcf.gov.ao",
+    password: "siif2024",
+    organization_id: 2,
+    profile_id: 7,
+    province: "Cabinda",
+  },
+  {
+    id: 5,
+    username: "TecnicoZaire",
+    email: "tecnico.zaire@cgcf.gov.ao",
+    password: "siif2024",
+    organization_id: 2,
+    profile_id: 8,
+    province: "Zaire",
+  },
+  {
+    id: 6,
+    username: "TecnicoCentral",
+    email: "tecnico.central@cgcf.gov.ao",
+    password: "siif2024",
+    organization_id: 2,
+    profile_id: 4,
+  },
 ];
 
 export const AuthProvider = ({ children }: PropsWithChildren<{}>) => {
@@ -101,29 +144,39 @@ export const AuthProvider = ({ children }: PropsWithChildren<{}>) => {
 
   const login = (username: string, password: string): Promise<boolean> => {
     return new Promise((resolve) => {
-      // Simulate network delay
       setTimeout(() => {
         const foundUser = mockUsers.find(
-          (u) => u.username === username && u.password === password
+          (u) =>
+            (u.username === username || u.email === username) &&
+            u.password === password,
         );
 
         if (foundUser) {
-          const organization = mockOrganizations.find(org => org.id === foundUser.organization_id);
-          const profile = mockProfiles.find(p => p.id === foundUser.profile_id);
-          
+          const organization = mockOrganizations.find(
+            (org) => org.id === foundUser.organization_id,
+          );
+          const profile = mockProfiles.find(
+            (p) => p.id === foundUser.profile_id,
+          );
+
           if (organization && profile) {
-              const { password, organization_id, profile_id, ...userToStore } = foundUser;
-              const fullUser: User = {
-                  ...userToStore,
-                  organization,
-                  profile
-              };
-              setUser(fullUser);
-              setIsAuthenticated(true);
-              resolve(true);
+            const {
+              password: _,
+              organization_id: __,
+              profile_id: ___,
+              ...userToStore
+            } = foundUser as any;
+            const fullUser: User = {
+              ...userToStore,
+              organization,
+              profile,
+              province: foundUser.province,
+            };
+            setUser(fullUser);
+            setIsAuthenticated(true);
+            resolve(true);
           } else {
-              // Data integrity issue in mock data
-              resolve(false);
+            resolve(false);
           }
         } else {
           resolve(false);
@@ -131,7 +184,7 @@ export const AuthProvider = ({ children }: PropsWithChildren<{}>) => {
       }, 500);
     });
   };
-  
+
   const logout = () => {
     setUser(null);
     setIsAuthenticated(false);
@@ -139,14 +192,10 @@ export const AuthProvider = ({ children }: PropsWithChildren<{}>) => {
 
   const hasRole = (role: UserRole): boolean => {
     if (!user?.profile) return false;
-
     const userRole = user.profile.role;
-    
-    // "Administrador" has "Acesso total ao sistema"
-    if (userRole === 'administrador') {
-        return true;
-    }
-    
+    // Administrador tem acesso a tudo
+    if (userRole === "administrador") return true;
+    // Verificação estrita
     return userRole === role;
   };
 
@@ -158,7 +207,7 @@ export const AuthProvider = ({ children }: PropsWithChildren<{}>) => {
 export const useAuth = (): AuthContextType => {
   const context = useContext(AuthContext);
   if (context === undefined) {
-    throw new Error('useAuth must be used within an AuthProvider');
+    throw new Error("useAuth must be used within an AuthProvider");
   }
   return context;
 };

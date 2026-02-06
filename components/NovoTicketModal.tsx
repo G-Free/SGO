@@ -30,7 +30,7 @@ const NovoTicketModal: React.FC<NovoTicketModalProps> = ({ isOpen, onClose, onSa
       >
         <div className="px-6 py-4 border-b flex justify-between items-center bg-white rounded-t-lg">
             <h2 className="text-xl font-bold text-gray-800">Criar Novo Ticket de Suporte</h2>
-            <button onClick={onClose} className="p-2 rounded-full hover:bg-gray-200">
+            <button title="Fechar" onClick={onClose} className="p-2 rounded-full hover:bg-gray-200">
                 <X className="h-5 w-5 text-gray-600" />
             </button>
         </div>

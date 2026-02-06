@@ -12,18 +12,20 @@ declare global {
 
 const mockReportsData = [
   { id: 'REL-001', version: 2, month: 'Maio/2024', status: 'Validado', createdBy: 'Admin', createdAt: '2024-06-03', updatedBy: 'Admin', updatedAt: '2024-06-05', summary: 'Relatório validado. Todas as metas foram atingidas.', kpiMissions: 12, kpiInfractions: 5, kpiProjects: 2, activitiesSummary: 'Fiscalização na costa norte concluída com sucesso.', challenges: 'Nenhum desafio significativo encontrado.', nextMonthPlan: 'Iniciar planeamento da auditoria de segurança anual.', history: [{ version: 1, status: 'Em Edição', updatedBy: 'Admin', updatedAt: '2024-06-03', summary: 'Versão inicial do relatório de Maio.' }] },
-  { id: 'REL-002', version: 1, month: 'Junho/2024', status: 'Em Edição', createdBy: 'Gestor 1', createdAt: '2024-07-01', updatedBy: 'Gestor 1', updatedAt: '2024-07-01', summary: 'Relatório em fase de elaboração.', kpiMissions: 15, kpiInfractions: 8, kpiProjects: 1, activitiesSummary: 'Atividades do mês de Junho em andamento.', challenges: 'Atraso na entrega de equipamentos.', nextMonthPlan: 'Concluir a migração dos servidores.', history: [] },
+  { id: 'REL-002', version: 1, month: 'Junho/2024', status: 'Rascunho', createdBy: 'Gestor 1', createdAt: '2024-07-01', updatedBy: 'Gestor 1', updatedAt: '2024-07-01', summary: 'Relatório em fase de elaboração.', kpiMissions: 15, kpiInfractions: 8, kpiProjects: 1, activitiesSummary: 'Atividades do mês de Junho em andamento.', challenges: 'Atraso na entrega de equipamentos.', nextMonthPlan: 'Concluir a migração dos servidores.', history: [] },
   { id: 'REL-003', version: 1, month: 'Abril/2024', status: 'Validado', createdBy: 'Admin', createdAt: '2024-05-04', updatedBy: 'Admin', updatedAt: '2024-05-04', summary: 'Resultados de Abril superaram as expectativas.', kpiMissions: 10, kpiInfractions: 3, kpiProjects: 3, activitiesSummary: 'Formação de novos colaboradores e auditoria interna.', challenges: 'Reestruturação da equipa de fiscalização.', nextMonthPlan: 'Aquisição de novas viaturas.', history: [] },
-  { id: 'REL-004', version: 2, month: 'Março/2024', status: 'Submetido', createdBy: 'Gestor 2', createdAt: '2024-04-06', updatedBy: 'Gestor 2', updatedAt: '2024-04-06', summary: 'Relatório submetido para validação da direção.', kpiMissions: 8, kpiInfractions: 10, kpiProjects: 1, activitiesSummary: 'Foco em operações na província de Benguela.', challenges: 'Condições meteorológicas adversas impactaram 2 missões.', nextMonthPlan: 'Revisar procedimentos de segurança em alto mar.', history: [{ version: 1, status: 'Em Edição', updatedBy: 'Gestor 2', updatedAt: '2024-04-05', summary: 'Versão de rascunho.'}] },
-  { id: 'REL-005', version: 1, month: 'Julho/2024', status: 'Em Edição', createdBy: 'Gestor 1', createdAt: '2024-07-28', updatedBy: 'Gestor 1', updatedAt: '2024-07-28', summary: 'Relatório do mês corrente.', kpiMissions: 5, kpiInfractions: 2, kpiProjects: 0, activitiesSummary: 'Missões iniciais do mês.', challenges: 'Aguardando dados consolidados.', nextMonthPlan: 'Finalizar o relatório até o dia 5.', history: [] },
+  { id: 'REL-004', version: 2, month: 'Março/2024', status: 'Encaminhado', createdBy: 'Gestor 2', createdAt: '2024-04-06', updatedBy: 'Gestor 2', updatedAt: '2024-04-06', summary: 'Relatório encaminhado para o GMO Central.', kpiMissions: 8, kpiInfractions: 10, kpiProjects: 1, activitiesSummary: 'Foco em operações na província de Benguela.', challenges: 'Condições meteorológicas adversas impactaram 2 missões.', nextMonthPlan: 'Revisar procedimentos de segurança em alto mar.', history: [{ version: 1, status: 'Em Edição', updatedBy: 'Gestor 2', updatedAt: '2024-04-05', summary: 'Versão de rascunho.'}] },
+  { id: 'REL-005', version: 1, month: 'Julho/2024', status: 'Submetido', createdBy: 'Gestor 1', createdAt: '2024-07-28', updatedBy: 'Gestor 1', updatedAt: '2024-07-28', summary: 'Relatório submetido ao Coordenador Operacional.', kpiMissions: 5, kpiInfractions: 2, kpiProjects: 0, activitiesSummary: 'Missões iniciais do mês.', challenges: 'Aguardando dados consolidados.', nextMonthPlan: 'Finalizar o relatório até o dia 5.', history: [] },
   { id: 'REL-006', version: 1, month: 'Fevereiro/2024', status: 'Validado', createdBy: 'Admin', createdAt: '2024-03-05', updatedBy: 'Admin', updatedAt: '2024-03-05', summary: 'Relatório de Fevereiro validado.', kpiMissions: 9, kpiInfractions: 4, kpiProjects: 1, activitiesSummary: 'Operação Carnaval Segura.', challenges: 'Aumento de pequenas infrações.', nextMonthPlan: 'Análise de dados da operação.', history: [] },
   { id: 'REL-007', version: 1, month: 'Janeiro/2024', status: 'Validado', createdBy: 'Admin', createdAt: '2024-02-04', updatedBy: 'Admin', updatedAt: '2024-02-04', summary: 'Relatório de início de ano.', kpiMissions: 7, kpiInfractions: 1, kpiProjects: 2, activitiesSummary: 'Planeamento anual e primeiras missões.', challenges: 'Adaptação às novas diretrizes.', nextMonthPlan: 'Aumentar número de fiscalizações.', history: [] },
 ];
 
 const statusColors: { [key: string]: string } = {
   'Validado': 'bg-green-100 text-green-800',
+  'Rascunho': 'bg-gray-100 text-gray-800',
   'Em Edição': 'bg-yellow-100 text-yellow-800',
   'Submetido': 'bg-blue-100 text-blue-800',
+  'Encaminhado': 'bg-indigo-100 text-indigo-800',
 };
 
 const ITEMS_PER_PAGE = 5;
@@ -34,7 +36,7 @@ const RelatoriosPage: React.FC = () => {
   const navigate = useNavigate();
   const [reports, setReports] = useState(mockReportsData);
   const [searchTerm, setSearchTerm] = useState('');
-  const [statusFilter, setStatusFilter] = useState('Em Edição');
+  const [statusFilter, setStatusFilter] = useState('Todos');
   const [dateFilter, setDateFilter] = useState({ start: '', end: '' });
   const [reportToDelete, setReportToDelete] = useState<typeof mockReportsData[0] | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
@@ -44,6 +46,8 @@ const RelatoriosPage: React.FC = () => {
   const [selectedReport, setSelectedReport] = useState<typeof mockReportsData[0] | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
 
+  // Logo validado para jsPDF
+  const validLogoBase64 = "./conteudo/imagem/logo_sistema_5.png";
 
   const handleOpenDeleteModal = (report: typeof mockReportsData[0]) => {
     setReportToDelete(report);
@@ -162,36 +166,43 @@ const RelatoriosPage: React.FC = () => {
             setIsExportingPDF(false);
             return;
         }
-        const { jsPDF } = window.jspdf;
-        const doc = new jsPDF();
-        if (typeof (doc as any).autoTable !== 'function') {
-             setIsExportingPDF(false);
-            return;
-        }
+        try {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            if (typeof (doc as any).autoTable !== 'function') {
+                 setIsExportingPDF(false);
+                return;
+            }
 
-        const logoSrc = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAARgAAABDCAYAAAC2+lYkAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAd8SURBVHhe7Z1/bBxlHMc/s8zKsh/BhmEDExiMMWEi16W5NEmTNC0tDVLbFGqjth80bf2x/bFJk6Zp2rRNWv2xTVWb6oc2DZImaVq6lK7JTSmJuW5iAgMMGOwgK8uyLPv8I3e5d3Zmdnd2d9d9fz8vB3be2Z3f/X7e5/l5dhcQCAQCgUAgEAgEAoFAIBAIBAKBQCAQCAQCgUAgEAgEAoFAIBAIBAKBQCAQCATrgmEYx+vr678MDAx8tbS09PHAwMC35+fn/6FQKPzMzMy3UqlUHxsb+0ZFRfWv0tLS7x4eHj6VSqU+Pj4+vrCw8J+Tk5NPzs7OfqRSqV+o1f9/hUIhMpnMPzo6+tX4+Pgvj46O/k6lUj+YnZ39ZHt7+60xMTGfjI2Nfb5arT4xOTn5xezs7C/FYvEbvb29b6VS6Z+1tbX/0Nra+kQ8Hv98PB7/x/F4/N3xePyT8Xj89+Px+Cfj8fiPx+Px347H4x+Nx+N/HI/H/zgej/+beDz+R/F4/I/i8fgfx+PxP4rH438aj8f/MB6P/2E8Hv+DeDz+X4jH498lHo/fJR6P3ycej98lHo/fJh6P3yIej18jHo9fJR6PXyMej18lHo9fIh6PXyAej18gHo9fIB6PXyAej18gHo9fJB6PXyQej18kHo9fJB6PXyQej18kHo9fJB6PXyQej18kHo9fIB6PXyAej18gHo9fIB6PXyIej18hHo9fIR6PXyEej18hHo9fIR6PXyEej18hHo9fIR6PXyMeb7+vX78KHo9fIR6PXykejy8SjycSjycSj6cRj6cSj6cRjyYQj0YSj6cRj5cQj5cQj6cSj1cRj1cRj1cQj1cQjxcRj5eIxyuIx2uIxmuIxyuIxyuIx4uIx+OIxyOIxyOIx1OIxxOIxxOIx4OIx4OIxwOIxwOIx4OIx9OIx9OIxxOIxyOJxxKJxyKJxxKJxyOJxxKIx5KIRxKIxxKIR1KIhxKIRyKIRyKIR4SIR1KIRySIRzKIR3KIRzKIRyKIRwKIR4KEIxHEIyHEIx6EIx6EIRwKIhwSIRwSIRwKIhwKEQ4FIRwKEQ4FEA96EI92kI92kI92kI9kEA8kEA8kEI9kEA8kEI8EkA8lkI/EkA/FkA/HkA/GEI/GEY/FEY/FEY/EEA/HEI/HEI/FEo/FEY/FEQ/Hkg/Hkg/FkA/FkA/Hkg/HkQ/HkQ/FkQ/GkY/GEY/GkY/GEY9GkI/GkY9GEI+GEA/6EY/4EY/2EA/3EI93kI92kI/0kI8EEg/2kI9kEI+mkA8nkI9nkI9nkI8mkA8nkI8kkI/FEI+FEI9FEo9EEo9GEo9GEg+6EY+6EQ+7EI+7EI+5kI84kI84kI84kI84kI84EI8YkI8IkA8IEA8IkA8IkI+okA+okI+skA9kkI9EkA9mkA/mkA+WkA9UkA9UkA8kkI+mkI+kkI/nkI+nkI/nkI+GkA8lkA8mEI8mEI9GEg+mEA9GkI+GEA8GEQ8GEg+GEg8EkI8AkA8CEg4GEA8GEA4GkA4EkA8CkAwHkAyHkA4GkA4EkAoGEAwGEAwEkAkFkAyEEAkFkAyEkAmEkAmEkAmGkAmEkAmEEAmEkAmEEAmEkAmEkAmEkAmEkAmEkAmEEAmEkAmGEAmGEAmEkAmEkAmEkAl6kAl6kAkGkAkEEAmEEAmGEAmGEAmEkAmEkAmEkAmEkAmEkAmGEAmEEAmEEAmEEAmEkAmEkAmEkAmEkAmEkAmEkAmEkAmEkAmGEAkGEAkGEAkEkAkEEAmEEAmEEAmGEAkGEAmEEAl1kAqFQKBSCQiFQKAKFQKBSCQSCQCAQCIRCIRAIBAKBYD3gfwD88c+E9jG3SwAAAABJRU5kJggg==';
-        doc.addImage(logoSrc, 'PNG', 15, 10, 90, 10);
-        doc.text("Lista de Relatórios", 110, 17);
-        doc.setFontSize(10);
-        doc.setTextColor(100);
-        doc.text(`Data de Emissão: ${new Date().toLocaleDateString('pt-AO')}`, 15, 30);
-        (doc as any).autoTable({
-            startY: 40,
-            head: [['ID', 'Mês/Ano', 'Estado', 'Criado Por', 'Data Modificação']],
-            body: processedReports.map(r => [r.id, r.month, r.status, r.createdBy, r.updatedAt]),
-            theme: 'striped',
-            headStyles: { fillColor: [0, 43, 127] },
-            didDrawPage: (data: any) => {
-                const pageCount = doc.internal.getNumberOfPages();
-                doc.setFontSize(8);
-                doc.setTextColor(150);
-                doc.text(`Página ${data.pageNumber} de ${pageCount}`, data.settings.margin.left, doc.internal.pageSize.getHeight() - 10);
-                doc.text("SGO - Sistema de Gestão de Operação", doc.internal.pageSize.getWidth() - data.settings.margin.right, doc.internal.pageSize.getHeight() - 10, { align: 'right' });
-            },
-        });
-        doc.save('relatorios.pdf');
-        setIsExportingPDF(false);
-    }, 2000);
+            // Usando logo validado
+            doc.addImage(validLogoBase64, 'PNG', 15, 10, 30, 10);
+            doc.setFontSize(14);
+            doc.text("Lista de Relatórios", 110, 17);
+            doc.setFontSize(10);
+            doc.setTextColor(100);
+            doc.text(`Data de Emissão: ${new Date().toLocaleDateString('pt-AO')}`, 15, 30);
+            (doc as any).autoTable({
+                startY: 40,
+                head: [['ID', 'Mês/Ano', 'Estado', 'Criado Por', 'Data Modificação']],
+                body: processedReports.map(r => [r.id, r.month, r.status, r.createdBy, r.updatedAt]),
+                theme: 'striped',
+                headStyles: { fillColor: [0, 43, 127] },
+                didDrawPage: (data: any) => {
+                    const pageCount = doc.internal.getNumberOfPages();
+                    doc.setFontSize(8);
+                    doc.setTextColor(150);
+                    doc.text(`Página ${data.pageNumber} de ${pageCount}`, data.settings.margin.left, doc.internal.pageSize.getHeight() - 10);
+                    doc.text("SGO - Sistema de Gestão de Operação", doc.internal.pageSize.getWidth() - data.settings.margin.right, doc.internal.pageSize.getHeight() - 10, { align: 'right' });
+                },
+            });
+            doc.save('relatorios.pdf');
+        } catch (err) {
+            console.error("Erro ao exportar PDF:", err);
+            alert("Ocorreu um erro ao gerar o PDF. Verifique se as imagens estão disponíveis.");
+        } finally {
+            setIsExportingPDF(false);
+        }
+    }, 1500);
   };
 
   return (
@@ -236,7 +247,12 @@ const RelatoriosPage: React.FC = () => {
               <div>
                   <label htmlFor="status-filter" className="block text-sm font-medium text-gray-700 mb-1">Filtrar por Estado</label>
                   <select id="status-filter" value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-base">
-                      <option>Todos</option><option>Validado</option><option>Em Edição</option><option>Submetido</option>
+                      <option>Todos</option>
+                      <option>Validado</option>
+                      <option>Rascunho</option>
+                      <option>Em Edição</option>
+                      <option>Submetido</option>
+                      <option>Encaminhado</option>
                   </select>
               </div>
 
@@ -307,8 +323,8 @@ const RelatoriosPage: React.FC = () => {
             <div className="flex items-center justify-between mt-4 px-2">
                 <span className="text-sm text-gray-700">Página <span className="font-bold">{currentPage}</span> de <span className="font-bold">{totalPages}</span></span>
                 <div className="flex items-center space-x-2">
-                    <button onClick={() => setCurrentPage(p => Math.max(1, p - 1))} disabled={currentPage === 1} className="p-2 rounded-md bg-white border border-gray-300 disabled:opacity-50 hover:bg-gray-50"><ChevronLeft className="h-5 w-5"/></button>
-                    <button onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))} disabled={currentPage === totalPages} className="p-2 rounded-md bg-white border border-gray-300 disabled:opacity-50 hover:bg-gray-50"><ChevronRight className="h-5 w-5"/></button>
+                    <button title="Página anterior" onClick={() => setCurrentPage(p => Math.max(1, p - 1))} disabled={currentPage === 1} className="p-2 rounded-md bg-white border border-gray-300 disabled:opacity-50 hover:bg-gray-50"><ChevronLeft className="h-5 w-5"/></button>
+                    <button title="Próxima página" onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))} disabled={currentPage === totalPages} className="p-2 rounded-md bg-white border border-gray-300 disabled:opacity-50 hover:bg-gray-50"><ChevronRight className="h-5 w-5"/></button>
                 </div>
             </div>
         )}

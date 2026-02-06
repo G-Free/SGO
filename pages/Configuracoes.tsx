@@ -1,3 +1,4 @@
+
 import React, { useState, Fragment, lazy, Suspense } from 'react';
 import {
   Settings,
@@ -79,11 +80,11 @@ const GeralSection: React.FC = () => (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                         <label className="block text-sm font-medium text-gray-700">Nome da Instituição</label>
-                        <input type="text" defaultValue="Comité de Gestão Coordenada de Fronteiras" className="mt-1 block w-full rounded-md border-gray-300 shadow-sm sm:text-base" />
+                        <input title="Nome da instituição" type="text" defaultValue="Comité de Gestão Coordenada de Fronteiras" className="mt-1 block w-full rounded-md border-gray-300 shadow-sm sm:text-base" />
                     </div>
                     <div>
                         <label className="block text-sm font-medium text-gray-700">Unidade Local</label>
-                        <input type="text" defaultValue="Unidade Técnica Local de Luanda" className="mt-1 block w-full rounded-md border-gray-300 shadow-sm sm:text-base" />
+                        <input title="Nome da unidade local" type="text" defaultValue="Unidade Técnica Local de Luanda" className="mt-1 block w-full rounded-md border-gray-300 shadow-sm sm:text-base" />
                     </div>
                     <div>
                         <label className="block text-sm font-medium text-gray-700">Responsável Técnico</label>
@@ -147,7 +148,7 @@ const LayoutSection: React.FC = () => {
                 <div className="p-5 bg-white rounded-lg border">
                     <h4 className="font-semibold text-gray-800 mb-3">Logotipo do Cabeçalho</h4>
                     <p className="text-sm text-gray-500 mb-4">Faça o upload do logotipo para ser exibido no cabeçalho principal.</p>
-                    <input type="file" className="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-slate-100 file:text-slate-700 hover:file:bg-slate-200" />
+                    <input title="Logotipo do cabeçalho" type="file" className="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-slate-100 file:text-slate-700 hover:file:bg-slate-200" />
                 </div>
             </div>
         </SectionCard>
@@ -301,7 +302,7 @@ const ScriptsSection: React.FC = () => {
                 <div className="p-5 bg-white rounded-lg border">
                     <h4 className="font-semibold text-gray-800 mb-3">Execução Manual</h4>
                     <div className="flex items-center space-x-2">
-                        <input type="file" className="flex-grow block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:font-semibold file:bg-gray-100 file:text-gray-700 hover:file:bg-gray-200"/>
+                        <input title="Selecionar script para execução manual" type="file" className="flex-grow block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:font-semibold file:bg-gray-100 file:text-gray-700 hover:file:bg-gray-200"/>
                         <button className="bg-slate-600 hover:bg-slate-700 text-white font-bold py-2 px-4 rounded-lg flex items-center"><Play className="h-4 w-4 mr-2" /> Executar</button>
                     </div>
                 </div>
@@ -326,7 +327,7 @@ const ScriptsSection: React.FC = () => {
                                     <td className="px-4 py-3 font-mono text-sm">{task.command}</td>
                                     <td className="px-4 py-3 text-sm text-gray-600">{task.description}</td>
                                     <td className="px-4 py-3 text-center">
-                                        <button onClick={() => setScriptToDelete(task)} className="p-2 text-red-500 hover:bg-red-100 rounded-full">
+                                        <button title="Remover tarefa" onClick={() => setScriptToDelete(task)} className="p-2 text-red-500 hover:bg-red-100 rounded-full">
                                             <Trash2 size={16} />
                                         </button>
                                     </td>
@@ -370,15 +371,15 @@ const ParametrosSection: React.FC = () => (
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div>
                     <label className="block text-sm font-medium text-gray-700">Idioma Padrão</label>
-                    <select className="mt-1 block w-full rounded-md border-gray-300"><option>Português (Angola)</option></select>
+                    <select title="Idioma padrão do sistema" className="mt-1 block w-full rounded-md border-gray-300"><option>Português (Angola)</option></select>
                 </div>
                 <div>
                     <label className="block text-sm font-medium text-gray-700">Fuso Horário</label>
-                    <select className="mt-1 block w-full rounded-md border-gray-300"><option>(UTC+01:00) Luanda</option></select>
+                    <select title="Fuso horário padrão do sistema" className="mt-1 block w-full rounded-md border-gray-300"><option>(UTC+01:00) Luanda</option></select>
                 </div>
                  <div>
                     <label className="block text-sm font-medium text-gray-700">Moeda</label>
-                    <select className="mt-1 block w-full rounded-md border-gray-300"><option>AOA (Kwanza)</option></select>
+                    <select title="Moeda padrão do sistema" className="mt-1 block w-full rounded-md border-gray-300"><option>AOA (Kwanza)</option></select>
                 </div>
             </div>
         </div>
@@ -458,7 +459,6 @@ const LogsSection: React.FC = () => (
         </div>
     </SectionCard>
 );
-
 
 const ConfiguracoesPage: React.FC = () => {
   const [activeSection, setActiveSection] = useState<SectionId>('modulos');
