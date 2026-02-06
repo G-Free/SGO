@@ -1,10 +1,3 @@
-<<<<<<< HEAD
-import React, { useState, useRef, useEffect } from 'react';
-import logo from '../conteudo/imagem/Imagem1_logo.png';
-import { useAuth } from '../hooks/useAuth';
-import { LogOut, User, Settings, Bell, FileText, AlertTriangle, Trash2, LayoutGrid } from 'lucide-react';
-import { useNavigate, Link } from 'react-router-dom';
-=======
 import React, { useState, useRef, useEffect } from "react";
 import { useAuth } from "../hooks/useAuth";
 import {
@@ -26,7 +19,7 @@ import {
 import { useNavigate, Link, useLocation } from "react-router-dom";
 
 import cgcfLogo from "../conteudo/imagem/logo_sistema_5.png";
->>>>>>> 6695a7d (Remove componentes e páginas descontinuadas)
+
 
 interface HeaderProps {
   pageTitle: string;
@@ -112,18 +105,6 @@ const Header: React.FC<HeaderProps> = ({ pageTitle }) => {
     <header className="bg-gradient-to-r from-red-700 via-red-900 to-black text-white shadow-lg sticky top-0 z-20 border-b-4 border-yellow-400">
       <div className="container mx-auto px-4 sm:px-6">
         <div className="flex justify-between items-center h-16">
-<<<<<<< HEAD
-          
-          {/* Left: Logo, System Name, Page Title */}
-          <div className="flex items-center space-x-5">
-              <Link to="/dashboard" className="flex items-center space-x-3 hover:opacity-90 transition-opacity">
-                  <div className="w-16 h-14 rounded-md  flex items-center justify-center">
-                       <span className="text-xl font-black text-white"><img src={logo} alt="CGCF Logo" /></span>
-                  </div>
-              </Link>
-              <div className="w-px h-6 bg-white/30" />
-              <h1 className="text-lg font-semibold text-gray-200 hidden sm:block">{pageTitle}</h1>
-=======
           <div className="flex items-center space-x-4 h-full">
             <Link
               to={homeLink}
@@ -162,7 +143,6 @@ const Header: React.FC<HeaderProps> = ({ pageTitle }) => {
                 </>
               )}
             </nav>
->>>>>>> 6695a7d (Remove componentes e páginas descontinuadas)
           </div>
 
           {/* Data e hora */}

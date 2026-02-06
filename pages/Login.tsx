@@ -1,8 +1,3 @@
-import React, { useState } from 'react';
-import logo from '../conteudo/imagem/Imagem1.png';
-import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../hooks/useAuth';
-import { LogIn, User, Lock, Loader2, AlertTriangle } from 'lucide-react';
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
@@ -10,7 +5,6 @@ import { LogIn, User, Lock, Loader2, AlertTriangle } from "lucide-react";
 
 // Logotipo CGCF
 import cgcfLogo from "../conteudo/imagem/logo_sistema_5.png";
-
 
 const LoginPage: React.FC = () => {
   const navigate = useNavigate();
@@ -59,21 +53,11 @@ const LoginPage: React.FC = () => {
           ></div>
           <div className="absolute inset-0 bg-gradient-to-br from-[#002B7F] via-[#002266] to-[#001a4c] opacity-90"></div>
 
-<<<<<<< HEAD
-            <div className="relative flex flex-col justify-between h-full p-12 text-white">
-                <div className="z-8">
-                    <div className="flex items-center space-x-3">
-                        <div className="w-25 h-15 rounded-md  flex items-center justify-center">
-                            <span className="text-xl font-black text-white"><img src={logo} alt="CGCF Logo" /></span>
-                        </div>
-                    </div>
-=======
           <div className="relative flex flex-col justify-between h-full p-12 text-white">
             <div className="z-10">
               <div className="flex items-center space-x-10">
                 <div className="rounded-lg  shadow-lg">
                   <img src={cgcfLogo} alt="CGCF Logo" className="h-45 w-auto" />
->>>>>>> 6695a7d (Remove componentes e páginas descontinuadas)
                 </div>
               </div>
               <div>
