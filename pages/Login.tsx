@@ -44,7 +44,8 @@ const LoginPage: React.FC = () => {
       <div className="w-full max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 bg-white dark:bg-slate-800/50 shadow-2xl rounded-2xl overflow-hidden">
         {/* Left Branding Column */}
         <div className="relative hidden lg:block">
-          <div title="Background Image"
+          <div
+            title="Background Image"
             className="absolute inset-0 bg-cover bg-center"
             style={{
               backgroundImage:

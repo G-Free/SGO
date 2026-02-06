@@ -23,9 +23,7 @@ const SegurancaAuditoriaPage = lazy(() => import('./pages/SegurancaAuditoria'));
 const ConfiguracoesPage = lazy(() => import('./pages/Configuracoes'));
 const OrdensDeServicoPage = lazy(() => import('./pages/OrdensDeServico'));
 const CriarOrdemServicoPage = lazy(() => import('./pages/CriarOrdemServico'));
-const OrgaosEComposicaoPage = lazy(() => import('./pages/OrgaosEComposicao'));
 const PlanoDeAcaoPage = lazy(() => import('./pages/PlanoDeAcao'));
-const GestaoDeRiscoPage = lazy(() => import('./pages/GestaoDeRisco'));
 const NotificacoesPage = lazy(() => import('./pages/Notificacoes'));
 const AmeacasCiberneticasPage = lazy(() => import('./pages/AmeacasCiberneticas'));
 const BugsPage = lazy(() => import('./pages/Bugs'));
@@ -89,7 +87,6 @@ const App = () => {
                       <Route path="/relatorios/novo" element={<CriarRelatorioPage />} />
                       <Route path="/relatorios/editar/:reportId" element={<CriarRelatorioPage />} />
                       <Route path="/plano-de-acao" element={<PlanoDeAcaoPage />} />
-                      <Route path="/gestao-de-risco" element={<GestaoDeRiscoPage />} />
                       <Route path="/analises" element={<AnalisesPage />} />
                     </Route>
 
@@ -117,12 +114,6 @@ const App = () => {
                     {/* Ocorrências */}
                     <Route element={<ProtectedRoute allowedRoles={['administrador', 'coordenador_utl_regional', 'gestor_operacao_provincial']} />}>
                        <Route path="/ocorrencias" element={<OcorrenciasPage />} />
-                    </Route>
-                    
-                    {/* Património e HR */}
-                    <Route element={<ProtectedRoute allowedRoles={['administrador', 'coordenador_operacional_central', 'tecnico_si']} />}>
-                       <Route path="/rh" element={<RecursosHumanosPage />} />
-                       <Route path="/orgaos-e-composicao" element={<OrgaosEComposicaoPage />} />
                     </Route>
 
                     {/* TI e Auditoria */}
