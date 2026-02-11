@@ -81,7 +81,8 @@ const App = () => {
                     <Route path="/perfil" element={<PerfilPage />} />
 
                     {/* Coordenação Central e Relatórios */}
-                    <Route element={<ProtectedRoute allowedRoles={['administrador', 'coordenador_operacional_central', 'tecnico_operacional_central']} />}>
+                    <Route element={<ProtectedRoute allowedRoles={['administrador', 'coordenador_operacional_central', 'tecnico_operacional_central']} />}>                        
+                      <Route path="/dashboard" element={<DashboardPage />} />
                       <Route path="/coordenacao-central" element={<CoordenacaoCentralPage />} />
                       <Route path="/relatorios" element={<RelatoriosPage />} />
                       <Route path="/relatorios/novo" element={<CriarRelatorioPage />} />
