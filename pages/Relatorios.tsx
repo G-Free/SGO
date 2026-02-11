@@ -211,7 +211,7 @@ const RelatoriosPage: React.FC = () => {
         <div className="flex justify-between items-center mb-8">
           <div>
             <h1 className="text-3xl font-bold text-gray-800 mb-2">Módulo de Relatórios</h1>
-            <p className="text-gray-600">Crie, edite e gere relatórios mensais.</p>
+            <p className="text-gray-600">Crie, edite e gere relatórios.</p>
           </div>
           <div className="flex items-center space-x-2">
               <button 
