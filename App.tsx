@@ -81,8 +81,7 @@ const App = () => {
                     <Route path="/perfil" element={<PerfilPage />} />
 
                     {/* Coordenação Central e Relatórios */}
-                    <Route element={<ProtectedRoute allowedRoles={['administrador', 'coordenador_operacional_central', 'tecnico_operacional_central']} />}>                        
-                      <Route path="/dashboard" element={<DashboardPage />} />
+                    <Route element={<ProtectedRoute allowedRoles={['administrador', 'Coordenador_Central','coordenador_operacional_central', 'tecnico_operacional_central']} />}>  
                       <Route path="/coordenacao-central" element={<CoordenacaoCentralPage />} />
                       <Route path="/relatorios" element={<RelatoriosPage />} />
                       <Route path="/relatorios/novo" element={<CriarRelatorioPage />} />
@@ -92,7 +91,7 @@ const App = () => {
                     </Route>
 
                     {/* Monitorização */}
-                    <Route element={<ProtectedRoute allowedRoles={['administrador', 'coordenador_central', 'coordenador_operacional_central', 'tecnico_operacional_central', 'coordenador_utl_regional']} />}>
+                    <Route element={<ProtectedRoute allowedRoles={['administrador', 'Coordenador_Central', 'coordenador_operacional_central', 'tecnico_operacional_central', 'coordenador_utl_regional']} />}>
                       <Route path="/gestao-operacional" element={<MonitorizacaoOperacionalPage />} />
                     </Route>
 
