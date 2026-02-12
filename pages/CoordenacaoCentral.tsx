@@ -163,7 +163,7 @@ const CoordenacaoCentralPage: React.FC = () => {
             {/* HEADER */}
             <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6">
                 <div>
-                    <h1 className="text-3xl font-black text-slate-900 tracking-tight uppercase">Dashboard Estratégico</h1>
+                    <h1 className="text-3xl font-black text-slate-900 tracking-tight uppercase">Dashboard</h1>
                     <p className="text-slate-500 font-bold text-sm flex items-center mt-1">
                         <LayoutDashboard className="h-4 w-4 mr-2 text-blue-600" /> Inteligência Operacional e Supervisão Nacional
                     </p>
