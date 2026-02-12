@@ -99,7 +99,7 @@ const CalendarView: React.FC<{ planos: any[], onEdit: (p: any) => void }> = ({ p
             <div className="p-6 border-b flex flex-col sm:flex-row justify-between items-center bg-slate-50/50 gap-4">
                 <h3 className="text-sm font-black text-slate-800 uppercase tracking-widest flex items-center">
                     <CalendarIcon className="mr-2 text-indigo-600" size={18} />
-                    Cronograma de Planos Estratégicos
+                    Cronograma de Planos
                 </h3>
                 
                 <div className="flex items-center gap-3">
@@ -175,12 +175,12 @@ const PlanoDeAcaoPage: React.FC = () => {
         <div className="w-full">
             <div className="flex justify-between items-center mb-8">
                 <div>
-                    <h1 className="text-3xl font-bold text-gray-800 mb-2 uppercase tracking-tight">Plano de Acção e Estratégia</h1>
+                    <h1 className="text-3xl font-bold text-gray-800 mb-2 uppercase tracking-tight">Plano de Acção</h1>
                     <p className="text-gray-600">Gestão de diretrizes nacionais e acompanhamento das atividades operacionais vinculadas.</p>
                 </div>
                 {canManage && (
                     <button onClick={() => setIsModalOpen(true)} className="bg-blue-900 hover:bg-black text-white font-bold py-2.5 px-6 rounded-xl flex items-center transition-all shadow-lg active:scale-95">
-                        <PlusCircle className="h-5 w-5 mr-2" /> Novo Plano Nacional
+                        <PlusCircle className="h-5 w-5 mr-2" /> Novo Plano
                     </button>
                 )}
             </div>
@@ -199,7 +199,7 @@ const PlanoDeAcaoPage: React.FC = () => {
                     className={`px-6 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest flex items-center transition-all ${activeTab === 'calendario' ? 'bg-white text-blue-900 shadow-md' : 'text-slate-500 hover:text-slate-700'}`}
                 >
                     <CalendarIcon size={14} className="mr-2" />
-                    Calendário Estratégico
+                    Calendário
                 </button>
             </div>
 
@@ -305,7 +305,7 @@ const PlanoDeAcaoPage: React.FC = () => {
                                     {isExpanded && (
                                         <div className="p-8 border-t border-slate-100 bg-white animate-fadeIn">
                                             <div className="mb-8">
-                                                <h4 className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Descrição do Plano Estratégico</h4>
+                                                <h4 className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Descrição do Plano</h4>
                                                 <p className="text-sm text-slate-600 leading-relaxed italic">{plano.description}</p>
                                             </div>
 
@@ -373,7 +373,7 @@ const PlanoDeAcaoPage: React.FC = () => {
                     isOpen={!!planoToDelete} 
                     onClose={() => setPlanoToDelete(null)} 
                     onConfirm={handleConfirmDelete} 
-                    title="Eliminar Plano Estratégico" 
+                    title="Eliminar Plano" 
                     message={`Deseja realmente remover o plano "${planoToDelete?.title}"? Todas as conexões operacionais serão desvinculadas mas as atividades não serão apagadas.`} 
                 />
             </Suspense>
