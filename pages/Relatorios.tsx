@@ -1,23 +1,21 @@
 import React, { useState, useMemo, lazy, Suspense } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { PlusCircle, Edit, FileText, Trash2, ArrowLeft, File, Search, User, Calendar, ArrowUp, ArrowDown, ChevronLeft, ChevronRight, Loader2 } from 'lucide-react';
+import { useAuth } from '../hooks/useAuth';
 
 const ConfirmationModal = lazy(() => import('../components/ConfirmationModal'));
 const DetalheRelatorioModal = lazy(() => import('../components/DetalheRelatorioModal'));
-
 
 declare global {
     interface Window { jspdf: any; }
 }
 
 const mockReportsData = [
-  { id: 'REL-001', version: 2, month: 'Maio/2024', status: 'Validado', createdBy: 'Admin', createdAt: '2024-06-03', updatedBy: 'Admin', updatedAt: '2024-06-05', summary: 'Relatório validado. Todas as metas foram atingidas.', kpiMissions: 12, kpiInfractions: 5, kpiProjects: 2, activitiesSummary: 'Fiscalização na costa norte concluída com sucesso.', challenges: 'Nenhum desafio significativo encontrado.', nextMonthPlan: 'Iniciar planeamento da auditoria de segurança anual.', history: [{ version: 1, status: 'Em Edição', updatedBy: 'Admin', updatedAt: '2024-06-03', summary: 'Versão inicial do relatório de Maio.' }] },
-  { id: 'REL-002', version: 1, month: 'Junho/2024', status: 'Rascunho', createdBy: 'Gestor 1', createdAt: '2024-07-01', updatedBy: 'Gestor 1', updatedAt: '2024-07-01', summary: 'Relatório em fase de elaboração.', kpiMissions: 15, kpiInfractions: 8, kpiProjects: 1, activitiesSummary: 'Atividades do mês de Junho em andamento.', challenges: 'Atraso na entrega de equipamentos.', nextMonthPlan: 'Concluir a migração dos servidores.', history: [] },
-  { id: 'REL-003', version: 1, month: 'Abril/2024', status: 'Validado', createdBy: 'Admin', createdAt: '2024-05-04', updatedBy: 'Admin', updatedAt: '2024-05-04', summary: 'Resultados de Abril superaram as expectativas.', kpiMissions: 10, kpiInfractions: 3, kpiProjects: 3, activitiesSummary: 'Formação de novos colaboradores e auditoria interna.', challenges: 'Reestruturação da equipa de fiscalização.', nextMonthPlan: 'Aquisição de novas viaturas.', history: [] },
-  { id: 'REL-004', version: 2, month: 'Março/2024', status: 'Encaminhado', createdBy: 'Gestor 2', createdAt: '2024-04-06', updatedBy: 'Gestor 2', updatedAt: '2024-04-06', summary: 'Relatório encaminhado para o GMO Central.', kpiMissions: 8, kpiInfractions: 10, kpiProjects: 1, activitiesSummary: 'Foco em operações na província de Benguela.', challenges: 'Condições meteorológicas adversas impactaram 2 missões.', nextMonthPlan: 'Revisar procedimentos de segurança em alto mar.', history: [{ version: 1, status: 'Em Edição', updatedBy: 'Gestor 2', updatedAt: '2024-04-05', summary: 'Versão de rascunho.'}] },
-  { id: 'REL-005', version: 1, month: 'Julho/2024', status: 'Submetido', createdBy: 'Gestor 1', createdAt: '2024-07-28', updatedBy: 'Gestor 1', updatedAt: '2024-07-28', summary: 'Relatório submetido ao Coordenador Operacional.', kpiMissions: 5, kpiInfractions: 2, kpiProjects: 0, activitiesSummary: 'Missões iniciais do mês.', challenges: 'Aguardando dados consolidados.', nextMonthPlan: 'Finalizar o relatório até o dia 5.', history: [] },
-  { id: 'REL-006', version: 1, month: 'Fevereiro/2024', status: 'Validado', createdBy: 'Admin', createdAt: '2024-03-05', updatedBy: 'Admin', updatedAt: '2024-03-05', summary: 'Relatório de Fevereiro validado.', kpiMissions: 9, kpiInfractions: 4, kpiProjects: 1, activitiesSummary: 'Operação Carnaval Segura.', challenges: 'Aumento de pequenas infrações.', nextMonthPlan: 'Análise de dados da operação.', history: [] },
-  { id: 'REL-007', version: 1, month: 'Janeiro/2024', status: 'Validado', createdBy: 'Admin', createdAt: '2024-02-04', updatedBy: 'Admin', updatedAt: '2024-02-04', summary: 'Relatório de início de ano.', kpiMissions: 7, kpiInfractions: 1, kpiProjects: 2, activitiesSummary: 'Planeamento anual e primeiras missões.', challenges: 'Adaptação às novas diretrizes.', nextMonthPlan: 'Aumentar número de fiscalizações.', history: [] },
+  { id: 'REL-001', version: 2, month: 'Maio/2024', province: 'Luanda', status: 'Validado', createdBy: 'Admin', createdAt: '2024-06-03', updatedBy: 'Admin', updatedAt: '2024-06-05', summary: 'Relatório validado. Todas as metas foram atingidas.', kpiMissions: 12, kpiInfractions: 5, kpiProjects: 2, activitiesSummary: 'Fiscalização na costa norte concluída com sucesso.', challenges: 'Nenhum desafio significativo encontrado.', nextMonthPlan: 'Iniciar planeamento da auditoria de segurança anual.', history: [{ version: 1, status: 'Em Edição', updatedBy: 'Admin', updatedAt: '2024-06-03', summary: 'Versão inicial do relatório de Maio.' }] },
+  { id: 'REL-002', version: 1, month: 'Junho/2024', province: 'Zaire', status: 'Rascunho', createdBy: 'Gestor 1', createdAt: '2024-07-01', updatedBy: 'Gestor 1', updatedAt: '2024-07-01', summary: 'Relatório em fase de elaboração.', kpiMissions: 15, kpiInfractions: 8, kpiProjects: 1, activitiesSummary: 'Atividades do mês de Junho em andamento.', challenges: 'Atraso na entrega de equipamentos.', nextMonthPlan: 'Concluir a migração dos servidores.', history: [] },
+  { id: 'REL-003', version: 1, month: 'Abril/2024', province: 'Benguela', status: 'Validado', createdBy: 'Admin', createdAt: '2024-05-04', updatedBy: 'Admin', updatedAt: '2024-05-04', summary: 'Resultados de Abril superaram as expectativas.', kpiMissions: 10, kpiInfractions: 3, kpiProjects: 3, activitiesSummary: 'Formação de novos colaboradores e auditoria interna.', challenges: 'Reestruturação da equipa de fiscalização.', nextMonthPlan: 'Aquisição de novas viaturas.', history: [] },
+  { id: 'REL-004', version: 2, month: 'Março/2024', province: 'Cabinda', status: 'Encaminhado', createdBy: 'Gestor 2', createdAt: '2024-04-06', updatedBy: 'Gestor 2', updatedAt: '2024-04-06', summary: 'Relatório encaminhado para o GMO Central.', kpiMissions: 8, kpiInfractions: 10, kpiProjects: 1, activitiesSummary: 'Foco em operações na província de Benguela.', challenges: 'Condições meteorológicas adversas impactaram 2 missões.', nextMonthPlan: 'Revisar procedimentos de segurança em alto mar.', history: [{ version: 1, status: 'Em Edição', updatedBy: 'Gestor 2', updatedAt: '2024-04-05', summary: 'Versão de rascunho.'}] },
+  { id: 'REL-005', version: 1, month: 'Julho/2024', province: 'Zaire', status: 'Submetido', createdBy: 'Gestor 1', createdAt: '2024-07-28', updatedBy: 'Gestor 1', updatedAt: '2024-07-28', summary: 'Relatório submetido ao Coordenador Operacional.', kpiMissions: 5, kpiInfractions: 2, kpiProjects: 0, activitiesSummary: 'Missões iniciais do mês.', challenges: 'Aguardando dados consolidados.', nextMonthPlan: 'Finalizar o relatório até o dia 5.', history: [] },
 ];
 
 const statusColors: { [key: string]: string } = {
@@ -34,276 +32,116 @@ type SortableKeys = 'status' | 'createdAt' | 'updatedAt';
 
 const RelatoriosPage: React.FC = () => {
   const navigate = useNavigate();
+  const { user } = useAuth();
   const [reports, setReports] = useState(mockReportsData);
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('Todos');
   const [dateFilter, setDateFilter] = useState({ start: '', end: '' });
-  const [reportToDelete, setReportToDelete] = useState<typeof mockReportsData[0] | null>(null);
+  const [reportToDelete, setReportToDelete] = useState<any | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [sortConfig, setSortConfig] = useState<{ key: SortableKeys; direction: 'asc' | 'desc' } | null>({ key: 'updatedAt', direction: 'desc' });
   const [isExportingPDF, setIsExportingPDF] = useState(false);
   const [isExportingCSV, setIsExportingCSV] = useState(false);
-  const [selectedReport, setSelectedReport] = useState<typeof mockReportsData[0] | null>(null);
+  const [selectedReport, setSelectedReport] = useState<any | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
 
-  // Logo validado para jsPDF
-  const validLogoBase64 = "./conteudo/imagem/logo_sistema_5.png";
-
-  const handleOpenDeleteModal = (report: typeof mockReportsData[0]) => {
-    setReportToDelete(report);
-  };
-
-  const handleConfirmDelete = () => {
-    if (reportToDelete) {
-      setIsDeleting(true);
-      setTimeout(() => {
-        setReports(currentReports => currentReports.filter(report => report.id !== reportToDelete.id));
-        setReportToDelete(null);
-        setIsDeleting(false);
-      }, 1000);
-    }
-  };
-
-  const handleEditReport = (report: typeof mockReportsData[0]) => {
-    navigate(`/relatorios/editar/${report.id}`, { state: { report } });
-  };
-  
-  const handleViewDetails = (report: typeof mockReportsData[0]) => {
-    setSelectedReport(report);
-  };
+  const isRegionalUser = !!user?.province;
 
   const processedReports = useMemo(() => {
-    let sortableItems = [...reports];
+    let items = [...reports];
+    
+    // Filtro de Província (Secretariado Regional)
+    if (isRegionalUser) {
+        items = items.filter(r => r.province === user.province);
+    }
+
     if (sortConfig !== null) {
-      sortableItems.sort((a, b) => {
-        if (a[sortConfig.key] < b[sortConfig.key]) {
-          return sortConfig.direction === 'asc' ? -1 : 1;
-        }
-        if (a[sortConfig.key] > b[sortConfig.key]) {
-          return sortConfig.direction === 'asc' ? 1 : -1;
-        }
+      items.sort((a: any, b: any) => {
+        if (a[sortConfig.key] < b[sortConfig.key]) return sortConfig.direction === 'asc' ? -1 : 1;
+        if (a[sortConfig.key] > b[sortConfig.key]) return sortConfig.direction === 'asc' ? 1 : -1;
         return 0;
       });
     }
 
-    return sortableItems.filter(report => {
+    return items.filter(report => {
       const normalizedSearchTerm = searchTerm.toLowerCase();
       const matchesSearch = normalizedSearchTerm === '' ||
         [report.id, report.month, report.status, report.createdBy].some(field =>
           field && typeof field === 'string' && field.toLowerCase().includes(normalizedSearchTerm)
         );
-
       const matchesStatus = statusFilter === 'Todos' || report.status === statusFilter;
-
       const reportDateStr = report.createdAt;
-      const startDateStr = dateFilter.start;
-      const endDateStr = dateFilter.end;
-      const matchesDate = (!startDateStr || reportDateStr >= startDateStr) && (!endDateStr || reportDateStr <= endDateStr);
-
+      const matchesDate = (!dateFilter.start || reportDateStr >= dateFilter.start) && (!dateFilter.end || reportDateStr <= dateFilter.end);
       return matchesSearch && matchesStatus && matchesDate;
     });
-  }, [reports, searchTerm, statusFilter, dateFilter, sortConfig]);
+  }, [reports, searchTerm, statusFilter, dateFilter, sortConfig, user, isRegionalUser]);
 
   const totalPages = Math.ceil(processedReports.length / ITEMS_PER_PAGE);
-
-  const paginatedReports = useMemo(() => {
-    const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
-    return processedReports.slice(startIndex, startIndex + ITEMS_PER_PAGE);
-  }, [processedReports, currentPage]);
-
-  const requestSort = (key: SortableKeys) => {
-    let direction: 'asc' | 'desc' = 'asc';
-    if (sortConfig && sortConfig.key === key && sortConfig.direction === 'asc') {
-      direction = 'desc';
-    }
-    setSortConfig({ key, direction });
-  };
-  
-  const getSortIcon = (key: SortableKeys) => {
-    if (!sortConfig || sortConfig.key !== key) {
-      return null;
-    }
-    if (sortConfig.direction === 'asc') {
-      return <ArrowUp className="h-4 w-4 ml-1 inline-block" />;
-    }
-    return <ArrowDown className="h-4 w-4 ml-1 inline-block" />;
-  };
-
-  const handleExportCSV = () => {
-    if (processedReports.length === 0) {
-      alert("Não há dados para exportar com os filtros atuais.");
-      return;
-    }
-    setIsExportingCSV(true);
-    setTimeout(() => {
-        const headers = ["ID", "Mês/Ano", "Estado", "Criado Por", "Data Criação", "Data Modificação"];
-        const escapeCSV = (value: string) => `"${(value || '').replace(/"/g, '""')}"`;
-        const csvContent = [
-          headers.join(','),
-          ...processedReports.map(report => [
-            escapeCSV(report.id), escapeCSV(report.month), escapeCSV(report.status), escapeCSV(report.createdBy), escapeCSV(report.createdAt), escapeCSV(report.updatedAt)
-          ].join(','))
-        ].join('\n');
-        const blob = new Blob([`\uFEFF${csvContent}`], { type: 'text/csv;charset=utf-8;' });
-        const link = document.createElement("a");
-        link.setAttribute("href", URL.createObjectURL(blob));
-        link.setAttribute("download", "relatorios.csv");
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-        setIsExportingCSV(false);
-    }, 1500);
-  };
-  
-  const handleExportPDF = () => {
-    if (processedReports.length === 0) {
-      alert("Não há dados para exportar com os filtros atuais.");
-      return;
-    }
-    setIsExportingPDF(true);
-    setTimeout(() => {
-        if (!window.jspdf || !(window.jspdf as any).jsPDF) {
-            setIsExportingPDF(false);
-            return;
-        }
-        try {
-            const { jsPDF } = window.jspdf;
-            const doc = new jsPDF();
-            if (typeof (doc as any).autoTable !== 'function') {
-                 setIsExportingPDF(false);
-                return;
-            }
-
-            // Usando logo validado
-            doc.addImage(validLogoBase64, 'PNG', 15, 10, 30, 10);
-            doc.setFontSize(14);
-            doc.text("Lista de Relatórios", 110, 17);
-            doc.setFontSize(10);
-            doc.setTextColor(100);
-            doc.text(`Data de Emissão: ${new Date().toLocaleDateString('pt-AO')}`, 15, 30);
-            (doc as any).autoTable({
-                startY: 40,
-                head: [['ID', 'Mês/Ano', 'Estado', 'Criado Por', 'Data Modificação']],
-                body: processedReports.map(r => [r.id, r.month, r.status, r.createdBy, r.updatedAt]),
-                theme: 'striped',
-                headStyles: { fillColor: [0, 43, 127] },
-                didDrawPage: (data: any) => {
-                    const pageCount = doc.internal.getNumberOfPages();
-                    doc.setFontSize(8);
-                    doc.setTextColor(150);
-                    doc.text(`Página ${data.pageNumber} de ${pageCount}`, data.settings.margin.left, doc.internal.pageSize.getHeight() - 10);
-                    doc.text("SGO - Sistema de Gestão de Operação", doc.internal.pageSize.getWidth() - data.settings.margin.right, doc.internal.pageSize.getHeight() - 10, { align: 'right' });
-                },
-            });
-            doc.save('relatorios.pdf');
-        } catch (err) {
-            console.error("Erro ao exportar PDF:", err);
-            alert("Ocorreu um erro ao gerar o PDF. Verifique se as imagens estão disponíveis.");
-        } finally {
-            setIsExportingPDF(false);
-        }
-    }, 1500);
-  };
+  const paginatedReports = useMemo(() => processedReports.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE), [processedReports, currentPage]);
 
   return (
     <>
       <div className="w-full">
         <div className="flex justify-between items-center mb-8">
           <div>
-            <h1 className="text-3xl font-bold text-gray-800 mb-2">Módulo de Relatórios</h1>
-            <p className="text-gray-600">Crie, edite e gere relatórios.</p>
+            <h1 className="text-3xl font-bold text-gray-800 mb-2 uppercase tracking-tight">Gestão de Relatórios {isRegionalUser && ` - ${user.province}`}</h1>
+            <p className="text-gray-600">{isRegionalUser ? `Acesso restrito aos documentos da jurisdição de ${user.province}.` : 'Arquivo central de relatórios nacionais.'}</p>
           </div>
           <div className="flex items-center space-x-2">
-              <button 
-                onClick={handleExportPDF} 
-                className="bg-white border border-gray-300 text-gray-700 text-base font-semibold py-2 px-3 rounded-lg hover:bg-gray-50 transition-colors flex items-center disabled:opacity-50 disabled:cursor-not-allowed"
-                disabled={isExportingPDF || isExportingCSV}
-              >
-                  {isExportingPDF ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : <File className="h-4 w-4 mr-2" />}
-                  {isExportingPDF ? 'A Exportar...' : 'Exportar PDF'}
-              </button>
-              <button 
-                onClick={handleExportCSV} 
-                className="bg-white border border-gray-300 text-gray-700 text-base font-semibold py-2 px-3 rounded-lg hover:bg-gray-50 transition-colors flex items-center disabled:opacity-50 disabled:cursor-not-allowed"
-                disabled={isExportingPDF || isExportingCSV}
-              >
-                  {isExportingCSV ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : <File className="h-4 w-4 mr-2" />}
-                  {isExportingCSV ? 'A Exportar...' : 'Exportar CSV'}
-              </button>
-              <button onClick={() => navigate('/relatorios/novo')} className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg flex items-center transition-colors duration-200 text-base"><PlusCircle className="h-5 w-5 mr-2" />Criar Novo Relatório</button>
+              <button onClick={() => navigate('/relatorios/novo')} className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2.5 px-6 rounded-xl flex items-center transition-all text-sm uppercase tracking-widest"><PlusCircle className="h-5 w-5 mr-2" />Criar Novo Relatório</button>
           </div>
         </div>
         
-        <div className="bg-white p-4 rounded-lg border border-gray-200 mb-6">
+        <div className="bg-white p-4 rounded-xl border border-gray-200 mb-6 shadow-sm">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 items-end">
               <div className="lg:col-span-2">
-                  <label htmlFor="search-report" className="block text-sm font-medium text-gray-700 mb-1">Pesquisar</label>
+                  <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Pesquisar</label>
                   <div className="relative">
-                      <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3"><Search className="h-5 w-5 text-gray-400" /></div>
-                      <input type="text" id="search-report" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} placeholder="Pesquisar por ID, mês, estado..." className="block w-full rounded-md border-gray-300 pl-10 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-base"/>
+                      <div className="absolute inset-y-0 left-0 flex items-center pl-3"><Search className="h-4 w-4 text-gray-400" /></div>
+                      <input type="text" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} placeholder="ID, mês, estado..." className="block w-full rounded-lg border-gray-200 pl-10 py-2 text-sm font-bold"/>
                   </div>
               </div>
-
               <div>
-                  <label htmlFor="status-filter" className="block text-sm font-medium text-gray-700 mb-1">Filtrar por Estado</label>
-                  <select id="status-filter" value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-base">
-                      <option>Todos</option>
-                      <option>Validado</option>
-                      <option>Rascunho</option>
-                      <option>Em Edição</option>
-                      <option>Submetido</option>
-                      <option>Encaminhado</option>
+                  <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Estado</label>
+                  <select title="Filtrar por estado" value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)} className="block w-full rounded-lg border-gray-200 py-2 text-sm font-bold">
+                      <option>Todos</option><option>Validado</option><option>Rascunho</option><option>Em Edição</option><option>Submetido</option>
                   </select>
               </div>
-
               <div className="flex items-end space-x-2">
-                  <div className="flex-1">
-                      <label htmlFor="start-date" className="block text-sm font-medium text-gray-700 mb-1">De</label>
-                      <input type="date" id="start-date" value={dateFilter.start} onChange={(e) => setDateFilter({ ...dateFilter, start: e.target.value })} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-base"/>
-                  </div>
-                  <div className="flex-1">
-                      <label htmlFor="end-date" className="block text-sm font-medium text-gray-700 mb-1">Até</label>
-                      <input type="date" id="end-date" value={dateFilter.end} onChange={(e) => setDateFilter({ ...dateFilter, end: e.target.value })} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-base"/>
-                  </div>
+                  <input title="Data inicial" type="date" value={dateFilter.start} onChange={(e) => setDateFilter({ ...dateFilter, start: e.target.value })} className="block w-full rounded-lg border-gray-200 py-2 text-xs font-bold"/>
+                  <input title="Data final" type="date" value={dateFilter.end} onChange={(e) => setDateFilter({ ...dateFilter, end: e.target.value })} className="block w-full rounded-lg border-gray-200 py-2 text-xs font-bold"/>
               </div>
           </div>
         </div>
 
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-x-auto">
+        <div className="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
             {paginatedReports.length > 0 ? (
-                <table className="w-full divide-y divide-gray-200">
-                    <thead className="bg-gray-50">
+                <table className="w-full">
+                    <thead className="bg-slate-50 border-b border-slate-100">
                         <tr>
-                            <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID do Relatório</th>
-                            <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Mês/Ano</th>
-                            <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                <button onClick={() => requestSort('status')} className="flex items-center">
-                                    Estado {getSortIcon('status')}
-                                </button>
-                            </th>
-                            <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Criado Por</th>
-                            <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                <button onClick={() => requestSort('updatedAt')} className="flex items-center">
-                                    Data Modificação {getSortIcon('updatedAt')}
-                                </button>
-                            </th>
-                            <th scope="col" className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Ações</th>
+                            <th className="px-6 py-4 text-left text-[10px] font-black text-slate-400 uppercase tracking-widest">ID / Período</th>
+                            <th className="px-6 py-4 text-left text-[10px] font-black text-slate-400 uppercase tracking-widest">Estado</th>
+                            <th className="px-6 py-4 text-left text-[10px] font-black text-slate-400 uppercase tracking-widest">Autor</th>
+                            <th className="px-6 py-4 text-left text-[10px] font-black text-slate-400 uppercase tracking-widest">Modificação</th>
+                            <th className="px-6 py-4 text-right text-[10px] font-black text-slate-400 uppercase tracking-widest">Ações</th>
                         </tr>
                     </thead>
-                    <tbody className="bg-white divide-y divide-gray-200">
+                    <tbody className="divide-y divide-slate-50">
                         {paginatedReports.map((report) => (
-                            <tr key={report.id} className="hover:bg-gray-100 cursor-pointer" onClick={() => handleViewDetails(report)}>
-                                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{report.id}</td>
-                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800">{report.month}</td>
-                                <td className="px-6 py-4 whitespace-nowrap text-sm">
-                                    <span className={`px-2.5 py-1 text-xs font-semibold rounded-full ${statusColors[report.status] || ''}`}>{report.status}</span>
+                            <tr key={report.id} className="hover:bg-slate-50/50 cursor-pointer" onClick={() => setSelectedReport(report)}>
+                                <td className="px-6 py-4">
+                                    <div className="text-sm font-black text-slate-900">{report.id}</div>
+                                    <div className="text-[10px] font-bold text-blue-600 uppercase">{report.month}</div>
                                 </td>
-                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">{report.createdBy}</td>
-                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">{report.updatedAt}</td>
-                                <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                    <div className="flex justify-end items-center space-x-2">
-                                        <button onClick={(e) => { e.stopPropagation(); handleEditReport(report); }} className="text-indigo-600 hover:text-indigo-900 p-2 rounded-full hover:bg-indigo-100" title="Editar"><Edit className="h-5 w-5" /></button>
-                                        <button onClick={(e) => { e.stopPropagation(); handleOpenDeleteModal(report); }} className="text-red-600 hover:text-red-900 p-2 rounded-full hover:bg-red-100" title="Apagar"><Trash2 className="h-5 w-5" /></button>
+                                <td className="px-6 py-4">
+                                    <span className={`px-2.5 py-1 text-[10px] font-black uppercase rounded-full ${statusColors[report.status] || ''}`}>{report.status}</span>
+                                </td>
+                                <td className="px-6 py-4 text-sm font-bold text-slate-600">{report.createdBy}</td>
+                                <td className="px-6 py-4 text-xs font-medium text-slate-400">{report.updatedAt}</td>
+                                <td className="px-6 py-4 text-right">
+                                    <div className="flex justify-end gap-1">
+                                        <button onClick={(e) => { e.stopPropagation(); navigate(`/relatorios/editar/${report.id}`, { state: { report } }); }} className="p-2 text-indigo-600 hover:bg-indigo-50 rounded-lg"><Edit size={18} /></button>
+                                        <button onClick={(e) => { e.stopPropagation(); setReportToDelete(report); }} className="p-2 text-red-600 hover:bg-red-50 rounded-lg"><Trash2 size={18} /></button>
                                     </div>
                                 </td>
                             </tr>
@@ -311,38 +149,16 @@ const RelatoriosPage: React.FC = () => {
                     </tbody>
                 </table>
             ) : (
-                <div className="text-center py-16">
-                    <FileText className="mx-auto h-12 w-12 text-gray-400" />
-                    <h3 className="mt-2 text-lg font-medium text-gray-900">Nenhum relatório encontrado</h3>
-                    <p className="mt-1 text-base text-gray-500">Tente ajustar os seus filtros de pesquisa.</p>
+                <div className="text-center py-20">
+                    <FileText className="mx-auto h-12 w-12 text-slate-200 mb-4" />
+                    <h3 className="text-sm font-black text-slate-400 uppercase tracking-widest">Nenhum relatório encontrado</h3>
                 </div>
             )}
         </div>
-
-        {totalPages > 1 && (
-            <div className="flex items-center justify-between mt-4 px-2">
-                <span className="text-sm text-gray-700">Página <span className="font-bold">{currentPage}</span> de <span className="font-bold">{totalPages}</span></span>
-                <div className="flex items-center space-x-2">
-                    <button title="Página anterior" onClick={() => setCurrentPage(p => Math.max(1, p - 1))} disabled={currentPage === 1} className="p-2 rounded-md bg-white border border-gray-300 disabled:opacity-50 hover:bg-gray-50"><ChevronLeft className="h-5 w-5"/></button>
-                    <button title="Próxima página" onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))} disabled={currentPage === totalPages} className="p-2 rounded-md bg-white border border-gray-300 disabled:opacity-50 hover:bg-gray-50"><ChevronRight className="h-5 w-5"/></button>
-                </div>
-            </div>
-        )}
       </div>
       <Suspense fallback={null}>
-        <ConfirmationModal
-          isOpen={!!reportToDelete}
-          onClose={() => setReportToDelete(null)}
-          onConfirm={handleConfirmDelete}
-          title="Confirmar Exclusão de Relatório"
-          message={`Tem a certeza que deseja excluir o relatório "${reportToDelete?.id || ''}"? Esta ação não pode ser desfeita.`}
-          isLoading={isDeleting}
-        />
-        <DetalheRelatorioModal
-            isOpen={!!selectedReport}
-            onClose={() => setSelectedReport(null)}
-            report={selectedReport}
-        />
+        <ConfirmationModal isOpen={!!reportToDelete} onClose={() => setReportToDelete(null)} onConfirm={() => { setReports(prev => prev.filter(r => r.id !== reportToDelete.id)); setReportToDelete(null); }} title="Eliminar Relatório" message={`Deseja excluir permanentemente o relatório ${reportToDelete?.id}?`} />
+        <DetalheRelatorioModal isOpen={!!selectedReport} onClose={() => setSelectedReport(null)} report={selectedReport} />
       </Suspense>
     </>
   );

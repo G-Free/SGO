@@ -95,12 +95,12 @@ const mockUsers: (Omit<User, "organization" | "profile"> & {
   },
   {
     id: 3,
-    username: "CoordLuanda",
-    email: "coord.luanda@cgcf.gov.ao",
+    username: "Coordenador_UTL_Zaire",
+    email: "coord.zaire@cgcf.gov.ao",
     password: "siif2024",
     organization_id: 2,
     profile_id: 6,
-    province: "Luanda",
+    province: "Zaire",
   },
   {
     id: 7,
@@ -112,12 +112,12 @@ const mockUsers: (Omit<User, "organization" | "profile"> & {
   }, // NOVO USUÁRIO PCA
   {
     id: 4,
-    username: "GestorCabinda",
-    email: "gestor.cabinda@cgcf.gov.ao",
+    username: "Secretariado_Central_zaire",
+    email: "gestor.zaire@cgcf.gov.ao",
     password: "siif2024",
     organization_id: 2,
     profile_id: 7,
-    province: "Cabinda",
+    province: "Zaire",
   },
   {
     id: 5,

@@ -15,9 +15,7 @@ const PerfilPage = lazy(() => import("./pages/Perfil"));
 const RelatoriosPage = lazy(() => import("./pages/Relatorios"));
 const CriarRelatorioPage = lazy(() => import("./pages/CriarRelatorio"));
 const AtividadesPage = lazy(() => import("./pages/Atividades"));
-const CriarRelatorioAtividadePage = lazy(
-  () => import("./pages/CriarRelatorioAtividade"),
-);
+const CriarRelatorioAtividadePage = lazy(() => import("./pages/CriarRelatorioAtividade"));
 const RecursosHumanosPage = lazy(() => import("./pages/RecursosHumanos"));
 const OcorrenciasPage = lazy(() => import("./pages/Ocorrencias"));
 const UtilizadoresPage = lazy(() => import("./pages/Utilizadores"));
@@ -27,22 +25,15 @@ const OrdensDeServicoPage = lazy(() => import("./pages/OrdensDeServico"));
 const CriarOrdemServicoPage = lazy(() => import("./pages/CriarOrdemServico"));
 const PlanoDeAcaoPage = lazy(() => import("./pages/PlanoDeAcao"));
 const NotificacoesPage = lazy(() => import("./pages/Notificacoes"));
-const AmeacasCiberneticasPage = lazy(
-  () => import("./pages/AmeacasCiberneticas"),
-);
+const AmeacasCiberneticasPage = lazy(() => import("./pages/AmeacasCiberneticas"));
 const BugsPage = lazy(() => import("./pages/Bugs"));
 const AnalisesPage = lazy(() => import("./pages/Analises"));
 const ProcedimentoGmaPage = lazy(() => import("./pages/ProcedimentoGma"));
-const MonitorizacaoOperacionalPage = lazy(
-  () => import("./pages/GestaoOperacional"),
-);
+const MonitorizacaoOperacionalPage = lazy(() => import("./pages/GestaoOperacional"));
+const MonitorizacaoRegionalPage = lazy(() => import("./pages/MonitorizacaoRegional"));
 const CoordenacaoCentralPage = lazy(() => import("./pages/CoordenacaoCentral"));
-const CoordenacaoRegionalPage = lazy(
-  () => import("./pages/CoordenacaoRegional"),
-);
-const TecnicoOperacaoCentralPage = lazy(
-  () => import("./pages/TecnicoOperacaoCentral"),
-);
+const CoordenacaoRegionalPage = lazy(() => import("./pages/CoordenacaoRegional"));
+const TecnicoOperacaoCentralPage = lazy(() => import("./pages/TecnicoOperacaoCentral"));
 
 const FullPageLoader = () => (
   <div className="flex justify-center items-center h-screen bg-slate-50">
@@ -55,20 +46,9 @@ const Root = () => {
   if (!isAuthenticated) return <Navigate to="/login" replace />;
   const role = user?.profile.role;
 
-  // Coordenador Central (PCA) vai diretamente para a Monitorização Operacional
-  if (role === "coordenador_central")
-    return <Navigate to="/gestao-operacional" replace />;
-
-  // Coordenação Regional vai para a vista regional
-  if (role === "coordenador_utl_regional")
-    return <Navigate to="/coordenacao-regional" replace />;
-
-  // Apenas Técnicos Provinciais (locais) vão para o cockpit provincial automaticamente
-  if (role === "tecnico_operacao_provincial")
-    return <Navigate to="/tecnico-operacao-central" replace />;
-
-  // Redirecionamento padrão para Dashboard Principal
-  // Inclui: administrador, coordenador_operacional_central (Direção) e técnicos centrais
+  // Redirecionamento por Perfil (Landing Page)
+  /*if (role === 'coordenador_central') return <Navigate to="/gestao-operacional" replace />;*/
+  
   return <Navigate to="/dashboard" replace />;
 };
 
@@ -92,13 +72,10 @@ const App = () => {
                 <Route element={<AuthenticatedRoute />}>
                   <Route element={<MainLayout />}>
                     <Route path="/dashboard" element={<DashboardPage />} />
-                    <Route
-                      path="/notificacoes"
-                      element={<NotificacoesPage />}
-                    />
+                    <Route path="/notificacoes" element={<NotificacoesPage />} />
                     <Route path="/perfil" element={<PerfilPage />} />
 
-                    {/* Coordenação Central e Relatórios */}
+                    {/* Módulos Centrais e Relatórios */}
                     <Route
                       element={
                         <ProtectedRoute
@@ -106,31 +83,22 @@ const App = () => {
                             "administrador",
                             "coordenador_operacional_central",
                             "tecnico_operacional_central",
+                            "tecnico_operacao_provincial",
+                            "coordenador_utl_regional",
+                            "gestor_operacao_provincial",
                           ]}
                         />
                       }
-                    >
-                      <Route
-                        path="/coordenacao-central"
-                        element={<CoordenacaoCentralPage />}
-                      />
+                      >
+                      <Route path="/coordenacao-central" element={<CoordenacaoCentralPage />} />
                       <Route path="/relatorios" element={<RelatoriosPage />} />
-                      <Route
-                        path="/relatorios/novo"
-                        element={<CriarRelatorioPage />}
-                      />
-                      <Route
-                        path="/relatorios/editar/:reportId"
-                        element={<CriarRelatorioPage />}
-                      />
-                      <Route
-                        path="/plano-de-acao"
-                        element={<PlanoDeAcaoPage />}
-                      />
+                      <Route path="/relatorios/novo" element={<CriarRelatorioPage />} />
+                      <Route path="/relatorios/editar/:reportId" element={<CriarRelatorioPage />} />
+                      <Route path="/plano-de-acao" element={<PlanoDeAcaoPage />} />
                       <Route path="/analises" element={<AnalisesPage />} />
                     </Route>
 
-                    {/* Monitorização */}
+                    {/* Monitorização Nacional (PCA / Direção) */}
                     <Route
                       element={
                         <ProtectedRoute
@@ -138,19 +106,14 @@ const App = () => {
                             "administrador",
                             "coordenador_central",
                             "coordenador_operacional_central",
-                            "tecnico_operacional_central",
-                            "coordenador_utl_regional",
                           ]}
                         />
                       }
                     >
-                      <Route
-                        path="/gestao-operacional"
-                        element={<MonitorizacaoOperacionalPage />}
-                      />
+                      <Route path="/gestao-operacional" element={<MonitorizacaoOperacionalPage />} />
                     </Route>
 
-                    {/* Coordenação Regional */}
+                    {/* Supervisão Regional (Nível Provincial) */}
                     <Route
                       element={
                         <ProtectedRoute
@@ -161,18 +124,31 @@ const App = () => {
                         />
                       }
                     >
-                      <Route
-                        path="/coordenacao-regional"
-                        element={<CoordenacaoRegionalPage />}
-                      />
+                      <Route path="/coordenacao-regional" element={<CoordenacaoRegionalPage />} />
                     </Route>
 
-                    {/* Execução e Operação */}
+                    {/* Monitorização Regional / Tática */}
                     <Route
                       element={
                         <ProtectedRoute
                           allowedRoles={[
                             "administrador",
+                            "coordenador_utl_regional","gestor_operacao_provincial",
+                          ]}
+                        />
+                      }
+                    >
+                      <Route path="/monitorizacao-regional" element={<MonitorizacaoRegionalPage />} />
+                    </Route>
+
+                    {/* Execução Operativa e Ordens de Serviço */}
+                    <Route
+                      element={
+                        <ProtectedRoute
+                          allowedRoles={[
+                            "administrador",
+                            "coordenador_central",
+                            "secretario_central",
                             "coordenador_operacional_central",
                             "tecnico_operacional_central",
                             "coordenador_utl_regional",
@@ -182,52 +158,30 @@ const App = () => {
                         />
                       }
                     >
-                      <Route
-                        path="/tecnico-operacao-central"
-                        element={<TecnicoOperacaoCentralPage />}
-                      />
+                      <Route path="/tecnico-operacao-central" element={<TecnicoOperacaoCentralPage />} />
                       <Route path="/atividades" element={<AtividadesPage />} />
-                      <Route
-                        path="/atividades/:activityId/relatorio"
-                        element={<CriarRelatorioAtividadePage />}
-                      />
-                      <Route
-                        path="/ordens-de-servico"
-                        element={<OrdensDeServicoPage />}
-                      />
-                      <Route
-                        path="/ordens-de-servico/nova"
-                        element={<CriarOrdemServicoPage />}
-                      />
-                      <Route
-                        path="/ordens-de-servico/editar/:orderId"
-                        element={<CriarOrdemServicoPage />}
-                      />
-                      <Route
-                        path="/procedimento-gma"
-                        element={<ProcedimentoGmaPage />}
-                      />
+                      <Route path="/atividades/:activityId/relatorio" element={<CriarRelatorioAtividadePage />} />
+                      <Route path="/ordens-de-servico" element={<OrdensDeServicoPage />} />
+                      <Route path="/ordens-de-servico/nova" element={<CriarOrdemServicoPage />} />
+                      <Route path="/ordens-de-servico/editar/:orderId" element={<CriarOrdemServicoPage />} />
+                      <Route path="/procedimento-gma" element={<ProcedimentoGmaPage />} />
                     </Route>
 
-                    {/* Ocorrências */}
+                    {/* Ocorrências e Suporte */}
                     <Route
                       element={
                         <ProtectedRoute
                           allowedRoles={[
                             "administrador",
-                            "coordenador_utl_regional",
-                            "gestor_operacao_provincial",
+                            "tecnico_si"
                           ]}
                         />
                       }
                     >
-                      <Route
-                        path="/ocorrencias"
-                        element={<OcorrenciasPage />}
-                      />
+                      <Route path="/ocorrencias" element={<OcorrenciasPage />} />
                     </Route>
 
-                    {/* Património e HR */}
+                    {/* Recursos Humanos e Património */}
                     <Route
                       element={
                         <ProtectedRoute
@@ -242,7 +196,7 @@ const App = () => {
                       <Route path="/rh" element={<RecursosHumanosPage />} />
                     </Route>
 
-                    {/* TI e Auditoria */}
+                    {/* Configurações e Auditoria Técnica */}
                     <Route
                       element={
                         <ProtectedRoute
@@ -250,23 +204,11 @@ const App = () => {
                         />
                       }
                     >
-                      <Route
-                        path="/configuracoes"
-                        element={<ConfiguracoesPage />}
-                      />
-                      <Route
-                        path="/ameacas-ciberneticas"
-                        element={<AmeacasCiberneticasPage />}
-                      />
+                      <Route path="/configuracoes" element={<ConfiguracoesPage />} />
+                      <Route path="/ameacas-ciberneticas" element={<AmeacasCiberneticasPage />} />
                       <Route path="/bugs" element={<BugsPage />} />
-                      <Route
-                        path="/utilizadores"
-                        element={<UtilizadoresPage />}
-                      />
-                      <Route
-                        path="/seguranca-auditoria"
-                        element={<SegurancaAuditoriaPage />}
-                      />
+                      <Route path="/utilizadores" element={<UtilizadoresPage />} />
+                      <Route path="/seguranca-auditoria" element={<SegurancaAuditoriaPage />} />
                     </Route>
                   </Route>
                 </Route>

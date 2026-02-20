@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
 import { LogIn, User, Lock, Loader2, AlertTriangle } from "lucide-react";
+import homebackground from "../conteudo/imagem/loginbackground.jpeg";
 
 // Logotipo CGCF
 import cgcfLogo from "../conteudo/imagem/logo_sistema_5.png";
@@ -40,7 +41,10 @@ const LoginPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-slate-100 dark:bg-slate-900 flex items-center justify-center p-4 antialiased">
+    <div
+      title="Login Page"
+      className="min-h-screen bg-slate-100 dark:bg-slate-900 flex items-center justify-center p-4 antialiased"
+    >
       <div className="w-full max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 bg-white dark:bg-slate-800/50 shadow-2xl rounded-2xl overflow-hidden">
         {/* Left Branding Column */}
         <div className="relative hidden lg:block">
@@ -48,30 +52,32 @@ const LoginPage: React.FC = () => {
             title="Background Image"
             className="absolute inset-0 bg-cover bg-center"
             style={{
-              backgroundImage:
-                "url(https://images.unsplash.com/photo-1519389950473-47ba0277781c?q=80&w=2070&auto=format&fit=crop)",
+              backgroundImage: `url(${homebackground})`,
             }}
           ></div>
-          <div className="absolute inset-0 bg-gradient-to-br from-[#002B7F] via-[#002266] to-[#001a4c] opacity-90"></div>
+          <div className="absolute inset-0 bg-gradient-to-br from-[#002B7F] via-[#002266] to-[#001a4c] opacity-20"></div>
 
           <div className="relative flex flex-col justify-between h-full p-12 text-white">
             <div className="z-10">
               <div className="flex items-center space-x-10">
                 <div className="rounded-lg  shadow-lg">
-                  <img src={cgcfLogo} alt="CGCF Logo" className="h-45 w-auto" />
+                  <img src={cgcfLogo} alt="CGCF Logo" className="h-20 w-auto" />
                 </div>
               </div>
-              <div>
+              <div
+                className="mt-10 "
+                style={{ marginTop: "8rem" }}
+              >
                 <span className=" text-2xl font-medium font-bold tracking-tight block justify-center">
                   SGO - Sistema de Gestão de Operação
                 </span>
-                <p className="text-xl font-medium text-blue-400 mt-2 max-w-sm justify-center">
+                <p className="text-xl font-medium text-white-400 max-w-sm justify-center">
                   Plataforma integrada que fortalece o controlo, a transparência
                   e a eficiência operacional nas fronteiras nacionais.
                 </p>
               </div>
             </div>
-            <p className="text-sm text-blue-300 z-10 mt-4">
+            <p className="text-sm text-white-300 z-10 mt-10">
               &copy; 2025 Comité de Gestão Coordenada de Fronteiras.
             </p>
           </div>

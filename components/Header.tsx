@@ -20,7 +20,6 @@ import { useNavigate, Link, useLocation } from "react-router-dom";
 
 import cgcfLogo from "../conteudo/imagem/logo_sistema_5.png";
 
-
 interface HeaderProps {
   pageTitle: string;
 }
@@ -66,15 +65,15 @@ const Header: React.FC<HeaderProps> = ({ pageTitle }) => {
 
   const roles = user?.profile.role as string;
   const isperfil = [
+    "coordenador_central",
     "coordenador_operacional_central",
-    "tecnico_operacional_central",
+    "tecnico_operacional_central",    
+    "coordenador_utl_regional",
+    "gestor_operacao_provincial",
+    "tecnico_operacao_provincial",
   ].includes(role || "");
-  
 
-  const homeLink =
-    role === "coordenador_central"
-      ? "/gestao-operacional"
-      : "/"; 
+  const homeLink = role === "coordenador_central" ? "/" : "/";
 
   const toggleDropdown = (dropdown: "profile" | "notifications") => {
     setOpenDropdown((prev) => (prev === dropdown ? null : dropdown));
@@ -123,6 +122,7 @@ const Header: React.FC<HeaderProps> = ({ pageTitle }) => {
 
             {/* Indicador de Província (Regional) */}
             {isRegional && user?.province && (
+                           
               <div className="hidden sm:flex items-center bg-white/10 px-3 py-1.5 rounded-full border border-white/20 animate-fadeIn">
                 <MapPin size={14} className="text-yellow-400 mr-2" />
                 <span className="text-[11px] font-black uppercase tracking-widest text-white">

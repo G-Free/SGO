@@ -1,13 +1,13 @@
-
 export type UserRole = 
   | 'administrador' 
   | 'tecnico_si' 
   | 'coordenador_central' 
+  | 'secretario_central'           
   | 'coordenador_operacional_central' 
   | 'tecnico_operacional_central'
-  | 'coordenador_utl_regional'     // 📍 Supervisão Regional
-  | 'gestor_operacao_provincial'    // 🛠 Tático Regional
-  | 'tecnico_operacao_provincial';  // 🔧 Base Regional
+  | 'coordenador_utl_regional'     
+  | 'gestor_operacao_provincial'    
+  | 'tecnico_operacao_provincial';  
 
 export interface Organization {
     id: number;
@@ -27,7 +27,7 @@ export interface User {
   email: string;
   organization: Organization;
   profile: Profile;
-  province?: string; // Campo opcional para perfis regionais
+  province?: string; 
 }
 
 export interface AuthContextType {
@@ -41,35 +41,27 @@ export interface AuthContextType {
 export interface ServiceOrder {
   id: string;
   title: string;
-  status: 'Pendente' | 'Em Curso' | 'Pausada' | 'Concluída';
+  province?: string; // Novo campo para filtragem regional
   priority: 'Baixa' | 'Média' | 'Alta' | 'Urgente';
-  createdDate: string;
+  opStatus: 'Pendente' | 'Em Curso' | 'Concluída' | 'Pausada'; 
+  status: 'Pendente' | 'Aguardando Aprovação' | 'Aguardando Visto Físico' | 'Protocolado'; 
   
-  // Official Document Fields (UTC Modelo)
+  createdDate: string;
   reference: string;
   operationPeriod: string;
   
-  // Comando e Responsabilidade
   coordGeral: string;
-  coordGeralAdjTecnica: string;
-  coordTecnicoOperacional: string;
-  coordOperacional: string;
-  respOperacional: string;
-  respTecnicoOperacional: string;
-  respTecnicoOperacionalAdj: string;
+  responsabilidades: Array<{ cargo: string; nome: string }>;
   
-  // Apoio
-  apoioLogistica: string;
-  apoioCooperacaoInstitucional: string;
+  suporteLogistico: string;
   orgaosExecutores: string;
   
-  // Sections 01-12
   antecedentes: string;
   objetivos: string;
   alvos: string;
   accoesControlo: string;
   indicadoresDesempenho: string;
-  recursosHumanos: string;
+  equipaOperativa: Array<{ nome: string; cargo: string; unidade: string; acao: string }>;
   areaAccoes: string;
   postoComando: string;
   estrategiaActuacao: string;
@@ -77,4 +69,20 @@ export interface ServiceOrder {
   mapaCabimentacao: string;
   logisticaDetalhe: string;
   distribuicao: string;
+
+  signedDocument?: {
+    fileName: string;
+    uploadDate: string;
+    url: string;
+  };
+
+  respOperacional?: string;
+  coordGeralAdjTecnica?: string;
+  respTecnicoOperacional?: string;
+  coordTecnicoOperacional?: string;
+  respTecnicoOperacionalAdj?: string;
+  coordOperacional?: string;
+  apoioLogistica?: string;
+  apoioCooperacaoInstitucional?: string;
+  recursosHumanos?: string;
 }

@@ -17,6 +17,7 @@ import {
   Wrench,
   Cog,
   Bug,
+  BarChart3,
   GanttChartSquare,
 } from "lucide-react";
 
@@ -42,15 +43,15 @@ const DashboardPage: React.FC = () => {
       route: "/coordenacao-central",
     },
     {
-      title: "Coordenação Regional",
+      title: `Dashboard Coordenação ${user?.province}`,
       icon: MapPin,
       color: "blue",
       description: `Supervisão de processos e validação de procedimentos da província de ${user?.province}.`,
-      allowedRoles: ["administrador", "coordenador_utl_regional"],
+  allowedRoles: ["administrador",],
       route: "/coordenacao-regional",
-    },
+    },  
     {
-      title: "Monitorização Operacional",
+      title: "Dashboard Operacional",
       icon: LayoutDashboard,
       color: "sky",
       description: "Telemetria e KPIs táticos em tempo real.",
@@ -67,7 +68,7 @@ const DashboardPage: React.FC = () => {
         "administrador",
         "coordenador_operacional_central",
         "tecnico_operacional_central",
-        "gestor_operacao_provincial",
+        "coordenador_utl_regional",
         "tecnico_operacao_provincial",
       ],
       route: "/relatorios",
@@ -80,7 +81,10 @@ const DashboardPage: React.FC = () => {
         "Gestão técnica, missões táticas e ordens de intervenção operativa.",
       allowedRoles: [
         "administrador",
+        "coordenador_central",
+        "gestor_operacao_provincial",
         "coordenador_operacional_central",
+        "coordenador_utl_regional",
         "tecnico_si",
       ],
       route: "/ordens-de-servico",
@@ -95,7 +99,7 @@ const DashboardPage: React.FC = () => {
         "administrador",
         "coordenador_operacional_central",
         "tecnico_operacional_central",
-        "gestor_operacao_provincial",
+        "coordenador_utl_regional",
         "tecnico_operacao_provincial",
       ],
       route: "/atividades",
@@ -105,8 +109,16 @@ const DashboardPage: React.FC = () => {
       icon: Target,
       color: "indigo",
       description: "Acompanhamento de metas e diretrizes estratégicas.",
-      allowedRoles: ["administrador", "coordenador_operacional_central"],
+      allowedRoles: ["administrador", "coordenador_operacional_central", "coordenador_utl_regional",],
       route: "/plano-de-acao",
+    },
+    {
+      title: `Monitorização ${user?.province}`,
+      icon: BarChart3,
+      color: "indigo",
+      description: "Análise tática e indicadores de desempenho regional.",
+      allowedRoles: ["administrador", "coordenador_utl_regional","gestor_operacao_provincial"],
+      route: "/monitorizacao-regional",
     },
     {
       title: "Suporte e Ocorrências",
@@ -115,8 +127,6 @@ const DashboardPage: React.FC = () => {
       description: "Registo de incidentes e pedidos de suporte à Central.",
       allowedRoles: [
         "administrador",
-        "coordenador_utl_regional",
-        "gestor_operacao_provincial",
       ],
       route: "/ocorrencias",
     },
@@ -152,7 +162,6 @@ const DashboardPage: React.FC = () => {
       description: "Procedimentos para Grupos Móveis de Fiscalização e Ações.",
       allowedRoles: [
         "administrador",
-        "coordenador_central",
         "coordenador_operacional_central",
         "tecnico_operacional_central",
         "tecnico_operacao_provincial",
@@ -171,38 +180,6 @@ const DashboardPage: React.FC = () => {
 
   return (
     <div className="w-full">
-      {isRegional && (
-        <div className="mb-8 bg-blue-900 text-white p-6 rounded-[2rem] shadow-xl flex items-center justify-between border-4 border-blue-800/50">
-          <div>
-            <h2 className="text-2xl font-black uppercase tracking-tight">
-              UTL {user?.province}
-            </h2>
-            <p className="text-blue-200 text-sm font-bold uppercase tracking-widest mt-1 opacity-80">
-              Console de Comando Regional Ativo
-            </p>
-          </div>
-          <div className="p-4 bg-white/10 rounded-2xl">
-            <MapPin size={32} className="text-yellow-400" />
-          </div>
-        </div>
-      )}
-
-      {role === "coordenador_central" && (
-        <div className="mb-8 bg-gradient-to-r from-slate-800 to-slate-900 text-white p-6 rounded-[2rem] shadow-xl flex items-center justify-between border-4 border-slate-700/50">
-          <div>
-            <h2 className="text-2xl font-black uppercase tracking-tight">
-              Gabinete de Coordenação Central
-            </h2>
-            <p className="text-blue-200 text-sm font-bold uppercase tracking-widest mt-1 opacity-80">
-              Perfil de Visualização e Monitorização Nacional
-            </p>
-          </div>
-          <div className="p-4 bg-white/10 rounded-2xl">
-            <ShieldCheck size={32} className="text-yellow-400" />
-          </div>
-        </div>
-      )}
-
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
         {accessibleModules.map((module, index) => (
           <DashboardCard
